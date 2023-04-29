@@ -1,0 +1,219 @@
+import Colors from "../../constants/Colors";
+import { useNavigation } from "@react-navigation/native";
+import { HomeScreenNavigationProp } from "../navigation/types";
+import { StyleSheet } from "react-native";
+import {
+  Box,
+  Text,
+  Center,
+  FormControl,
+  Select,
+  CheckIcon,
+  WarningOutlineIcon,
+  Pressable,
+  Actionsheet,
+  Avatar,
+  Icon,
+  Image,
+  VStack,
+  HStack,
+  useDisclose,
+} from "native-base";
+import { Ionicons } from "@expo/vector-icons";
+const BlogScreen = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const { isOpen, onOpen, onClose } = useDisclose();
+  return (
+    <VStack>
+      <Box flex={1} alignItems="center">
+        <Pressable onPress={onOpen} position="relative">
+          {({ isHovered, isPressed }) => {
+            return (
+              <Box
+                w={100}
+                h="24"
+                // bg={
+                //   isPressed
+                //     ? Colors.text
+                //     : isHovered
+                //     ? "coolGray.200"
+                //     : Colors.text
+                // }
+                p="2"
+                style={{
+                  transform: [
+                    {
+                      scale: isPressed ? 0.96 : 1,
+                    },
+                  ],
+                  // borderBottomRightRadius: 70,
+                  // borderBottomLeftRadius: 10,
+                  // borderTopLeftRadius: 10,
+                  // borderTopRightRadius: 10,
+                  // borderRadius: 50,
+                  // shadowColor: "black",
+                  // shadowOffset: {
+                  //   width: 0,
+                  //   height: 6,
+                  // },
+                  // shadowOpacity: 0.39,
+                  // shadowRadius: 8.3,
+                  // elevation: 13,
+                }}
+              >
+                <VStack
+                  alignItems="center"
+                  position="absolute"
+                  justifyContent="center"
+                  left={2}
+                  top={2}
+                  flexWrap="wrap"
+                >
+                  <Image
+                    source={require("../../assets/icons/book.gif")}
+                    alt="Alternate Text"
+                    w="16"
+                    h="16"
+                  />
+                </VStack>
+                <Actionsheet
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  size="full"
+                  bg={Colors.background}
+                >
+                  <HStack m={5}>
+                    <Text
+                      color={Colors.onPrimary}
+                      fontSize="3xl"
+                      style={{ fontWeight: "300" }}
+                      pt={5}
+                    >
+                      Blogs
+                    </Text>
+                  </HStack>
+                  <Actionsheet.Content bg={Colors.text} pb={48}>
+                    <Center>
+                      <Box
+                        safeArea
+                        style={{
+                          height: "100%",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Center>
+                          <Box
+                            w="80"
+                            bg={Colors.onPrimary}
+                            p="4"
+                            rounded={10}
+                            mt="5"
+                            shadow={9}
+                            alignItems="center"
+                          >
+                            <VStack>
+                              <HStack py="3">
+                                <Image
+                                  source={require("../../assets/icons/Mojo.png")}
+                                  alt="Alternate Text"
+                                  w="9"
+                                  h="9"
+                                />
+                                <Text
+                                  bold
+                                  color={Colors.primary}
+                                  fontSize="xl"
+                                  px="2"
+                                >
+                                  MOJO
+                                </Text>
+                                <Text color={Colors.secondary} fontSize="xl">
+                                  "Monthly Journal"
+                                </Text>
+                              </HStack>
+                              <Text fontSize="md" color={Colors.secondary}>
+                                An initiative by Karma Global consists of
+                                Monthly News
+                              </Text>
+                            </VStack>
+                          </Box>
+                          <Box
+                            w="80"
+                            bg={Colors.onPrimary}
+                            p="4"
+                            rounded={10}
+                            mt="5"
+                            shadow={9}
+                            alignItems="center"
+                          >
+                            <VStack>
+                              <HStack py="3">
+                                <Image
+                                  source={require("../../assets/icons/WeTag.png")}
+                                  alt="Alternate Text"
+                                  w="9"
+                                  h="9"
+                                />
+                                <Text
+                                  bold
+                                  color={Colors.primary}
+                                  fontSize="xl"
+                                  px="2"
+                                >
+                                  WeTag
+                                </Text>
+                                <Text color={Colors.secondary} fontSize="xl">
+                                  "Weekly Newsletter"
+                                </Text>
+                              </HStack>
+                              <Text fontSize="md" color={Colors.secondary}>
+                                Karma Global's own Compliance related news
+                                magazine.
+                              </Text>
+                            </VStack>
+                          </Box>
+                        </Center>
+                      </Box>
+                    </Center>
+                  </Actionsheet.Content>
+                </Actionsheet>
+              </Box>
+            );
+          }}
+        </Pressable>
+      </Box>
+      <Box>
+        <Text
+          style={styles.text2}
+          color={Colors.onPrimary}
+          textAlign="center"
+          w={90}
+        >
+          Blogs
+        </Text>
+      </Box>
+    </VStack>
+  );
+};
+
+export default BlogScreen;
+
+const styles = StyleSheet.create({
+  text2: {
+    fontWeight: "300",
+    color: Colors.onPrimary,
+    letterSpacing: 0.9,
+    fontSize: 13,
+    top: -20,
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.39,
+    shadowRadius: 8.3,
+    elevation: 13,
+  },
+});
