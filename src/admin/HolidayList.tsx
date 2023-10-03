@@ -22,9 +22,14 @@ import {
   useDisclose,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
+import React from "react";
 const HolidayList = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { isOpen, onOpen, onClose } = useDisclose();
+
+  let [holidaylistid] = React.useState('adminholidaylist');
+  
+
   return (
     <VStack py="3">
       <Box flex={1} alignItems="center">
@@ -145,11 +150,16 @@ const HolidayList = () => {
                             mt="1"
                           >
                             <Select.Item
+                              key="adminholidaylist1"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminholidaylist2"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!

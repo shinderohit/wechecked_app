@@ -1,7 +1,6 @@
 import Colors from "../../constants/Colors";
-// import { useNavigation } from "@react-navigation/native";
-// import { HomeScreenNavigationProp } from "../navigation/types";
-import { StyleSheet, AppRegistry } from "react-native";
+
+import { StyleSheet, AppRegistry, Linking } from "react-native";
 import {
   Box,
   Text,
@@ -14,24 +13,50 @@ import {
   VStack,
   HStack,
   useDisclose,
+  ScrollView,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
-// import RNFS, { ReadDirItem } from "react-native-fs";
+
 
 const CaseStudyScreen = () => {
-  // const navigation = useNavigation<HomeScreenNavigationProp>();
+  
   const { isOpen, onOpen, onClose } = useDisclose();
-  // const [directories, setDirectories] = useState<ReadDirItem[]>([]);
+  const [name, setName] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchDirectories = async () => {
-  //     const dirs = await RNFS.readDir(RNFS.DocumentDirectoryPath + "/case_pdf");
-  //     setDirectories(dirs);
-  //   };
+  useEffect(() => {
+    getName();
+  }, []);
 
-  //   fetchDirectories();
-  // }, []);
+  async function getName() {
+    try {
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/case_study.php",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => 
+        {
+          // alert(JSON.stringify(data[0].data_var));
+          setName(data[0].data_var);
+        })
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try." + error);
+    }
+  }
+
+  async function downloadFile(url: string){
+    Linking.openURL(url);
+  }
 
   return (
     <VStack>
@@ -42,13 +67,6 @@ const CaseStudyScreen = () => {
               <Box
                 w={100}
                 h="24"
-                // bg={
-                //   isPressed
-                //     ? Colors.text
-                //     : isHovered
-                //     ? "coolGray.200"
-                //     : Colors.text
-                // }
                 p="2"
                 style={{
                   transform: [
@@ -56,19 +74,6 @@ const CaseStudyScreen = () => {
                       scale: isPressed || isHovered ? 0.96 : 1,
                     },
                   ],
-                  // borderBottomRightRadius: 70,
-                  // borderBottomLeftRadius: 10,
-                  // borderTopLeftRadius: 10,
-                  // borderTopRightRadius: 10,
-                  // borderRadius: 50,
-                  // shadowColor: "black",
-                  // shadowOffset: {
-                  //   width: 0,
-                  //   height: 6,
-                  // },
-                  // shadowOpacity: 0.39,
-                  // shadowRadius: 8.3,
-                  // elevation: 13,
                 }}
               >
                 <VStack
@@ -102,7 +107,7 @@ const CaseStudyScreen = () => {
                       Case Study
                     </Text>
                   </HStack>
-                  <Actionsheet.Content bg={Colors.text} pb={48}>
+                  <Actionsheet.Content bg={Colors.text} pb={22}>
                     <Center>
                       <Box safeArea alignItems="center">
                         <Box alignItems="center" mb={5}>
@@ -130,66 +135,84 @@ const CaseStudyScreen = () => {
                             }
                           />
                         </Box>
-                        {/* <Box>
-                          {directories.map((directory) => (
-                            <Box key={directory.name} style={{ margin: 10 }}>
-                              <Box
-                                style={{
-                                  flexDirection: "row",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <Box
-                                  style={{
-                                    width: 50,
-                                    height: 50,
-                                    backgroundColor: "gray",
-                                    marginRight: 10,
-                                  }}
-                                ></Box>
-                                <Box style={{ flex: 1 }}>
+                        <ScrollView>
+                        <Box safeArea alignItems="center">
+                          <Box w="80" mb="3">
+                            {name &&
+                              name.length > 0 &&
+                              name.map((name, index) => (
+                                <Box key={"HRCentral" + index}
+                                  w="80"
+                                  h="auto"
+                                  bg={Colors.onPrimary}
+                                  p="4"
+                                  rounded={10}
+                                  borderColor="#ccc"
+                                  borderWidth="1"
+                                  position="relative"
+                                  style={styles.shadow}
+                                  mb="5"
+                                >
                                   <Text
-                                    numberOfLines={1}
-                                    style={{ fontWeight: "bold" }}
-                                  >
-                                    {directory.name.replace(".pdf", "")}
+                                    style={{ textTransform: "capitalize" }}
+                                    fontSize="md"
+                                    >
+                                    {name[0]}
                                   </Text>
-                                  <Pressable
-                                    style={{
-                                      backgroundColor: "red",
-                                      padding: 10,
-                                      borderRadius: 5,
-                                      marginTop: 5,
-                                    }}
-                                    onPress={() =>
-                                      RNFS.downloadFile({
-                                        fromUrl: `https://karmamgmt.com/wecheckbetav0.1/case_pdf/${encodeURIComponent(
-                                          directory.name
-                                        )}`,
-                                        toFile: `${RNFS.DocumentDirectoryPath}/${directory.name}`,
-                                      })
-                                        .promise.then(() => {
-                                          console.log(
-                                            "File downloaded successfully!"
-                                          );
-                                        })
-                                        .catch((error) => {
-                                          console.log(
-                                            "File download error:",
-                                            error
-                                          );
-                                        })
-                                    }
-                                  >
-                                    <Text style={{ color: "white" }}>
-                                      Click Here To Download!
-                                    </Text>
-                                  </Pressable>
+
+                                  <Box pt={3}>
+                                    <Pressable onPress={() => downloadFile(name[1])}>
+                                      {({ isHovered, isPressed }) => {
+                                        return (
+                                          <Box
+                                            alignItems="center"
+                                            bgColor={
+                                              isPressed
+                                                ? "#3E4095"
+                                                : isHovered
+                                                ? "#3E4095"
+                                                : "#3E4095"
+                                            }
+                                            style={{
+                                              transform: [
+                                                {
+                                                  scale: isPressed ? 0.96 : 1,
+                                                },
+                                              ],
+                                              shadowColor: "black",
+                                              shadowOffset: {
+                                                width: 0,
+                                                height: 6,
+                                              },
+                                              shadowOpacity: 0.39,
+                                              shadowRadius: 8.3,
+                                              elevation: 13,
+                                            }}
+                                            bg={Colors.text}
+                                            w="72"
+                                            h="8"
+                                            rounded="10"
+                                            shadow={3}
+                                            borderWidth="1"
+                                            borderColor={Colors.text}
+                                          >
+                                            <Text
+                                              color={Colors.onPrimary}
+                                              style={styles.text1}
+                                              pt="1"
+                                            >
+                                              Click Here to Download
+                                            </Text>
+                                          </Box>
+                                        );
+                                      }}
+                                    </Pressable>
+                                  </Box>
                                 </Box>
-                              </Box>
-                            </Box>
-                          ))}
-                        </Box> */}
+                              ))}
+                          </Box>
+                        </Box>
+                      </ScrollView>
                       </Box>
                     </Center>
                   </Actionsheet.Content>

@@ -1,61 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { Table, Row } from "react-native-table-component";
 import Colors from "../constants/Colors";
-const tableDataSample = {
+
+
+
+export const tableDataSample = {
   tableHead: [
-    "Class Of Employment",
-    "Total Per Day",
-    "Total Per Month",
-    "Class Of Employment",
-    "Total Per Day",
+    // "Class Of Employment",
+    // "Total Per Day",
+    // "Total Per Month",
+    // "Class Of Employment",
+    // "Total Per Day",
   ],
-  widthArr: [150, 110, 110, 150, 120],
+  // widthArr: [150, 110, 110, 150, 120, 150],
   tableData: [
-    ["Unskilled", "529.00", "13754.00", "$2.70", "$839,702,328,904"],
-    [
-      "Semi-Skilled/Unskilled Supervisory",
-      "586.00",
-      "15236.00",
-      "$3.49",
-      "$359,080,563,225",
-    ],
-    ["Skilled/Clerical", "671.00", "17446.00", "$0.03", "$79,470,820,738"],
-    ["Highly Skilled", "729.00", "18954.00", "$4.68", "$69,446,144,361"],
-    ["Unskilled", "529.00", "13754.00", "$2.70", "$839,702,328,904"],
-    [
-      "Semi-Skilled/Unskilled Supervisory",
-      "586.00",
-      "15236.00",
-      "$3.49",
-      "$359,080,563,225",
-    ],
-    ["Skilled/Clerical", "671.00", "17446.00", "$0.03", "$79,470,820,738"],
-    ["Highly Skilled", "729.00", "18954.00", "$4.68", "$69,446,144,361"],
-    ["Unskilled", "529.00", "13754.00", "$2.70", "$839,702,328,904"],
-    [
-      "Semi-Skilled/Unskilled Supervisory",
-      "586.00",
-      "15236.00",
-      "$3.49",
-      "$359,080,563,225",
-    ],
-    ["Skilled/Clerical", "671.00", "17446.00", "$0.03", "$79,470,820,738"],
-    ["Highly Skilled", "729.00", "18954.00", "$4.68", "$69,446,144,361"],
-    ["Unskilled", "529.00", "13754.00", "$2.70", "$839,702,328,904"],
-    [
-      "Semi-Skilled/Unskilled Supervisory",
-      "586.00",
-      "15236.00",
-      "$3.49",
-      "$359,080,563,225",
-    ],
-    ["Skilled/Clerical", "671.00", "17446.00", "$0.03", "$79,470,820,738"],
-    ["Highly Skilled", "729.00", "18954.00", "$4.68", "$69,446,144,361"],
+    // ["Unskilled", "529.00", "13754.00", "$2.70", "$839,702,328,904"],
+    // [
+    //   "Semi-Skilled/Unskilled Supervisory",
+    //   "586.00",
+    //   "15236.00",
+    //   "$3.49",
+    //   "$359,080,563,225",
+    // ],
+    // ["Skilled/Clerical", "671.00", "17446.00", "$0.03", "$79,470,820,738"],
+    // ["Highly Skilled", "729.00", "18954.00", "$4.68", "$69,446,144,361"],
+    // ["Unskilled", "529.00", "13754.00", "$2.70", "$839,702,328,904"],
+    // [
+    //   "Semi-Skilled/Unskilled Supervisory",
+    //   "586.00",
+    //   "15236.00",
+    //   "$3.49",
+    //   "$359,080,563,225",
+    // ],
+    // ["Skilled/Clerical", "671.00", "17446.00", "$0.03", "$79,470,820,738"],
+    // ["Highly Skilled", "729.00", "18954.00", "$4.68", "$69,446,144,361"],
+    // ["Unskilled", "529.00", "13754.00", "$2.70", "$839,702,328,904"],
+    // [
+    //   "Semi-Skilled/Unskilled Supervisory",
+    //   "586.00",
+    //   "15236.00",
+    //   "$3.49",
+    //   "$359,080,563,225",
+    // ],
+    // ["Skilled/Clerical", "671.00", "17446.00", "$0.03", "$79,470,820,738"],
+    // ["Highly Skilled", "729.00", "18954.00", "$4.68", "$69,446,144,361"],
+    // ["Unskilled", "529.00", "13754.00", "$2.70", "$839,702,328,904"],
+    // [
+    //   "Semi-Skilled/Unskilled Supervisory",
+    //   "586.00",
+    //   "15236.00",
+    //   "$3.49",
+    //   "$359,080,563,225",
+    // ],
+    // ["Skilled/Clerical", "671.00", "17446.00", "$0.03", "$79,470,820,738"],
+    // ["Highly Skilled", "729.00", "18954.00", "$4.68", "$69,446,144,361"],
   ],
 };
+
 const DataTable = () => {
   const [data, setData] = React.useState(tableDataSample);
+  const widthArr = new Array(data.tableHead.length).fill(100);
+
+  const [tabid] = useState("tab");
+  
   return (
     <View style={styles.container}>
       <ScrollView horizontal={true}>
@@ -65,7 +73,7 @@ const DataTable = () => {
           >
             <Row
               data={data.tableHead}
-              widthArr={data.widthArr}
+              widthArr={widthArr}
               style={styles.head}
               textStyle={{
                 fontSize: 14,
@@ -81,9 +89,9 @@ const DataTable = () => {
             >
               {data.tableData.map((rowData, index) => (
                 <Row
-                  key={index}
+                  key={tabid + index}
                   data={rowData}
-                  widthArr={data.widthArr}
+                  widthArr={widthArr}
                   style={styles.rowSection}
                   textStyle={styles.text}
                 />

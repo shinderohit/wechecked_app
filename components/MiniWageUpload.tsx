@@ -119,11 +119,16 @@ const MiniWageUpload = () => {
                             }}
                           >
                             <Select.Item
+                              key="adminminwageupload1"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminminwageupload2"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage
                             leftIcon={<WarningOutlineIcon size="xs" />}
@@ -162,11 +167,16 @@ const MiniWageUpload = () => {
                             mt="1"
                           >
                             <Select.Item
+                              key="adminminwageupload3"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminminwageupload4" 
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!
@@ -202,11 +212,16 @@ const MiniWageUpload = () => {
                             mt="1"
                           >
                             <Select.Item
+                              key="adminminwageupload5"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminminwageupload6"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!

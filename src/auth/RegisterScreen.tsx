@@ -11,7 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../navigation/types";
 const { height } = Dimensions.get("window");
-// import AppTextInput from "../../components/AppTextInput";
 import {
   Box,
   Text,
@@ -69,7 +68,7 @@ const RegisterScreen = () => {
   async function UserRegistrationFunction() {
     try {
       const response_var = await fetch(
-        "https://karmamgmt.com/wecheckbetav0.1/samplesignup1.php",
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/samplesignup1.php",
         {
           method: "POST",
           headers: {
@@ -87,10 +86,13 @@ const RegisterScreen = () => {
       )
         .then(async (response) => response.json())
         .then(async (response) => {
-          alert(JSON.stringify(response));
+          alert(
+            "Filled information is" + " Empty or " + JSON.stringify(response)
+          );
         })
         .catch((error) => {
           alert("Error in responce. " + error);
+          navigation.navigate("Login");
         });
     } catch (error) {
       alert("Error in try. " + error);
@@ -157,6 +159,7 @@ const RegisterScreen = () => {
                     placeholder="Name"
                     style={styles.text}
                     aria-required="true"
+                    cursorColor={Colors.onPrimary}
                     focusOutlineColor={Colors.onPrimary}
                   />
                   <Input
@@ -209,6 +212,7 @@ const RegisterScreen = () => {
                     borderRadius="10"
                     placeholder="Password"
                     autoCapitalize="none"
+                    cursorColor={Colors.onPrimary}
                   />
                   <Input
                     fontSize="sm"
@@ -240,6 +244,7 @@ const RegisterScreen = () => {
                     borderRadius="10"
                     placeholder="Confirm Password"
                     autoCapitalize="none"
+                    cursorColor={Colors.onPrimary}
                   />
                   <Input
                     fontSize="sm"
@@ -248,10 +253,8 @@ const RegisterScreen = () => {
                     value={mobile}
                     color={Colors.onPrimary}
                     focusOutlineColor={Colors.onPrimary}
+                    cursorColor={Colors.onPrimary}
                     onChangeText={(text) => setMobile(text)}
-                    // InputLeftElement={
-                    //   <Icon as={<Ionicons name="person" />} size={5} ml="2" color="muted.400" />
-                    // }
                     variant="underlined"
                     borderColor={Colors.primary}
                     borderRadius="10"

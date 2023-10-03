@@ -1,7 +1,4 @@
-import type {
-  CompositeNavigationProp,
-  RouteProp,
-} from "@react-navigation/native";
+import type { CompositeNavigationProp } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 
@@ -9,18 +6,13 @@ export type HomeStackNavigatorParamList = {
   Welcome: undefined;
   Login: undefined;
   Register: undefined;
-  OnBoarding: undefined;
-  Home: undefined;
-  Details: {
-    name: string;
-    birthYear: string;
-  };
-  Compliance: { sort: "latest" | "top" } | undefined;
+  Verification: {email:string};
+  Home: {email:string};
+  Compliance: undefined;
   ComplianceNot: undefined;
   Services: undefined;
-  Profile: undefined;
+  Profile: {email:string};
   MinWage: undefined;
-  Min: undefined;
   Holiday: undefined;
   BareAct: undefined;
   Abstracts: undefined;
@@ -29,16 +21,28 @@ export type HomeStackNavigatorParamList = {
   NewsLetter: undefined;
   CaseStudy: undefined;
   Admin: undefined;
+  Privacy:undefined;
+  Contact:undefined;
+  Feedback:undefined;
+  Settings:undefined;
+  Notification: undefined;
 };
 
 export type BottomTabNavigatorParamList = {
-  Home: undefined;
-  HomeStack: HomeStackNavigatorParamList;
+  Home: {email:string};
   Notification: undefined;
   Menu: undefined;
 };
 
 export type HomeScreenNavigationProp = CompositeNavigationProp<
-  NativeStackNavigationProp<HomeStackNavigatorParamList, "Profile">,
-  BottomTabNavigationProp<BottomTabNavigatorParamList, "Menu">
+  NativeStackNavigationProp<HomeStackNavigatorParamList, "Home">,
+  BottomTabNavigationProp<BottomTabNavigatorParamList, "Home">
 >;
+
+export type HomeStack1NavigatorParamList = {
+  Home:
+    | {
+        email: string;
+      }
+    | undefined;
+};

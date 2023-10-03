@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { NativeBaseProvider } from "native-base";
 import RootNavigator from "./src/navigation";
+import { AppRegistry } from "react-native";
 
 export default function App() {
   return (
@@ -12,3 +13,5 @@ export default function App() {
     </>
   );
 }
+
+AppRegistry.registerComponent("main", () => App);

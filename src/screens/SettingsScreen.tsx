@@ -1,12 +1,29 @@
-import { Box, Center, Icon, Pressable, Text, Image } from "native-base";
+import {
+  Box,
+  Center,
+  Icon,
+  Pressable,
+  Text,
+  Image,
+  useDisclose,
+} from "native-base";
 import Colors from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../navigation/types";
-import { StyleSheet } from "react-native";
+import { Linking, StyleSheet } from "react-native";
+import ContactUs from "../../components/ContactUs";
+import Feedback from "../../components/Feedback";
 
 const SettingsScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  const { isOpen, onOpen, onClose } = useDisclose();
+  const email = "avinash@karmamgmt.com";
+
+  async function openLink(url: string) {
+    Linking.openURL(url);
+  }
+
   return (
     <Box safeArea flex="1" h="100" maxWidth="100%" bg={Colors.background}>
       <Center pb={5}>
@@ -22,30 +39,7 @@ const SettingsScreen = () => {
         <Pressable
           alignItems="flex-start"
           flexDirection="row"
-          onPress={() => navigation.navigate("Admin")}
-        >
-          <Icon
-            as={Ionicons}
-            size="8"
-            name="settings-outline"
-            color={Colors.primary}
-          />
-          <Text
-            style={styles.text}
-            color={Colors.onPrimary}
-            fontSize="xl"
-            pt="1"
-            pl={3}
-          >
-            Admin
-          </Text>
-        </Pressable>
-      </Box>
-      <Box py={3} px={6}>
-        <Pressable
-          alignItems="flex-start"
-          flexDirection="row"
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => openLink("https://karmamgmt.com/about/")}
         >
           <Icon
             as={Ionicons}
@@ -68,7 +62,7 @@ const SettingsScreen = () => {
         <Pressable
           alignItems="flex-start"
           flexDirection="row"
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.navigate("Privacy")}
         >
           <Icon
             as={Ionicons}
@@ -88,50 +82,10 @@ const SettingsScreen = () => {
         </Pressable>
       </Box>
       <Box py={3} px={6}>
-        <Pressable
-          alignItems="flex-start"
-          flexDirection="row"
-          onPress={() => navigation.navigate("Home")}
-        >
-          <Icon
-            as={Ionicons}
-            size="8"
-            name="call-outline"
-            color={Colors.primary}
-          />
-          <Text
-            style={styles.text}
-            color={Colors.onPrimary}
-            fontSize="xl"
-            pt="1"
-            pl={3}
-          >
-            Contact Us
-          </Text>
-        </Pressable>
+        <ContactUs />
       </Box>
       <Box py={3} px={6}>
-        <Pressable
-          alignItems="flex-start"
-          flexDirection="row"
-          onPress={() => navigation.navigate("Home")}
-        >
-          <Icon
-            as={Ionicons}
-            size="8"
-            name="chatbox-ellipses-outline"
-            color={Colors.primary}
-          />
-          <Text
-            style={styles.text}
-            color={Colors.onPrimary}
-            fontSize="xl"
-            pt="1"
-            pl={3}
-          >
-            Feedback
-          </Text>
-        </Pressable>
+        <Feedback />
       </Box>
     </Box>
   );

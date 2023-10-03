@@ -116,11 +116,16 @@ const BareAct = () => {
                             mt="1"
                           >
                             <Select.Item
+                              key="adminbareact1"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminbareact2"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!
@@ -157,11 +162,16 @@ const BareAct = () => {
                             mt="1"
                           >
                             <Select.Item
+                              key="adminbareact3"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminbareact4"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!

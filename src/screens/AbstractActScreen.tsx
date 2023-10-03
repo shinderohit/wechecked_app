@@ -1,7 +1,7 @@
 import Colors from "../../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../navigation/types";
-import { StyleSheet } from "react-native";
+import { Linking, StyleSheet } from "react-native";
 import {
   Box,
   Text,
@@ -25,6 +25,21 @@ const AbstractActScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [state, setState] = useState([]);
+  const [act, setAct] = useState([]);
+  const [lang, setLang] = useState([]);
+
+  //Avinash Start Code
+  let [selectedstateOption, selectedStateOption] = React.useState('');
+  let [selectedactOption, selectedActOption] = React.useState('');
+  let [selectedlangOption, selectedLangOption] = React.useState('');
+
+  let [stateid] = React.useState('AbsState');
+  let [actid] = React.useState('Act');
+  let [langid] = React.useState('Lang');
+
+  //Avinash end Code
+
+  
 
   useEffect(() => {
     getState();
@@ -52,6 +67,98 @@ const AbstractActScreen = () => {
     }
   }
 
+  async function getAct() {
+    try {
+      
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/act_abst_act.php",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            state: selectedstateOption,
+          }),
+          
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => setAct(data))
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try. " + error);
+    }
+  }
+
+  async function getLang() {
+    try {
+      
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/act_abst_lang.php",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            state: selectedstateOption,
+            act: selectedactOption,
+          }),
+          
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => setLang(data))
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try. " + error);
+    }
+  }
+
+  async function getAbstract() {
+    try {
+      
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/act_abst_download.php",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            state: selectedstateOption,
+            act: selectedactOption,
+            lang_var: selectedlangOption,
+          }),
+          
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => 
+        {
+          // alert(JSON.stringify(data));
+          downloadFile(data);
+        })
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try. " + error);
+    }
+  }
+  async function downloadFile(url: string){
+    Linking.openURL(url);
+  }
+  
+
   return (
     <VStack>
       <Box flex={1} alignItems="center">
@@ -61,13 +168,6 @@ const AbstractActScreen = () => {
               <Box
                 w={100}
                 h="24"
-                // bg={
-                //   isPressed
-                //     ? Colors.text
-                //     : isHovered
-                //     ? "coolGray.200"
-                //     : Colors.text
-                // }
                 p="2"
                 style={{
                   transform: [
@@ -75,19 +175,6 @@ const AbstractActScreen = () => {
                       scale: isPressed ? 0.96 : 1,
                     },
                   ],
-                  // borderBottomRightRadius: 70,
-                  // borderBottomLeftRadius: 10,
-                  // borderTopLeftRadius: 10,
-                  // borderTopRightRadius: 10,
-                  // borderRadius: 50,
-                  // shadowColor: "black",
-                  // shadowOffset: {
-                  //   width: 0,
-                  //   height: 6,
-                  // },
-                  // shadowOpacity: 0.39,
-                  // shadowRadius: 8.3,
-                  // elevation: 13,
                 }}
               >
                 <VStack
@@ -138,6 +225,7 @@ const AbstractActScreen = () => {
                             borderTopWidth={0}
                             minWidth="300"
                             h="10"
+                            onValueChange={(itemValue) => selectedStateOption(itemValue)}
                             color={Colors.primary}
                             fontSize="sm"
                             rounded={10}
@@ -164,7 +252,7 @@ const AbstractActScreen = () => {
                               state.length > 0 &&
                               state.map((state, index) => (
                                 <Select.Item
-                                  key={state}
+                                  key={stateid + index}
                                   label={state}
                                   value={state}
                                 />
@@ -193,25 +281,30 @@ const AbstractActScreen = () => {
                             borderTopWidth={0}
                             minWidth="300"
                             h="10"
+                            onOpen={getAct}
+                            onValueChange={(itemValue) => selectedActOption(itemValue)}
                             color={Colors.primary}
                             fontSize="sm"
                             rounded={10}
                             marginTop={2}
                             borderColor={Colors.text}
-                            accessibilityLabel="Choose Industries"
-                            placeholder="Choose Industries"
+                            accessibilityLabel="Choose Act"
+                            placeholder="Choose Act"
                             _selectedItem={{
                               bg: "teal.600",
                               endIcon: <CheckIcon size={3} />,
                             }}
                             mt="1"
                           >
-                            <Select.Item
-                              color={Colors.secondary}
-                              label="test"
-                              value="test"
-                            />
-                            <Select.Item label="test" value="test" />
+                            {act &&
+                              act.length > 0 &&
+                              act.map((act, index) => (
+                                <Select.Item
+                                  key={actid + index}
+                                  label={act}
+                                  value={act}
+                                />
+                              ))}
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!
@@ -234,24 +327,29 @@ const AbstractActScreen = () => {
                             borderTopWidth={0}
                             minWidth="300"
                             h="10"
+                            onOpen={getLang}
+                            onValueChange={(itemValue) => selectedLangOption(itemValue)}
                             color={Colors.primary}
                             fontSize="sm"
                             rounded={10}
                             marginTop={2}
-                            accessibilityLabel="Choose Dates"
-                            placeholder="Choose Dates"
+                            accessibilityLabel="Choose Language"
+                            placeholder="Choose Language"
                             _selectedItem={{
                               bg: "teal.600",
                               endIcon: <CheckIcon size={3} />,
                             }}
                             mt="1"
                           >
-                            <Select.Item
-                              color={Colors.secondary}
-                              label="test"
-                              value="test"
-                            />
-                            <Select.Item label="test" value="test" />
+                            {lang &&
+                            lang.length > 0 &&
+                            lang.map((lang, index) => (
+                              <Select.Item
+                                key={langid + index}
+                                label={lang}
+                                value={lang}
+                              />
+                            ))}
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!
@@ -260,7 +358,7 @@ const AbstractActScreen = () => {
 
                         <Box alignItems="center" pt="10">
                           <Pressable
-                            onPress={() => navigation.navigate("Home")}
+                            onPress={() => getAbstract()}
                           >
                             {({ isHovered, isPressed }) => {
                               return (

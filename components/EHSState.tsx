@@ -1,7 +1,7 @@
 import Colors from "../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../src/navigation/types";
-import { StyleSheet } from "react-native";
+import { Linking, StyleSheet } from "react-native";
 import {
   Box,
   Text,
@@ -23,19 +23,25 @@ import {
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, Component, useEffect } from "react";
+
+import BareActEHSStateView from "./BareActEHSStateView";
+
 const EHSState = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [state, setState] = useState([]);
+  const [name, setName] = useState([]);
+
+  const [ehsstateid] = useState("ehsstate");
 
   useEffect(() => {
-    getState();
+    getName();
   }, []);
 
-  async function getState() {
+  async function getName() {
     try {
       const response_var = await fetch(
-        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/bare_state.php",
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/bare_ehs_state.php",
         {
           method: "GET",
           headers: {
@@ -45,13 +51,21 @@ const EHSState = () => {
         }
       )
         .then(async (response) => response.json())
-        .then(async (data) => setState(data))
+        .then(async (data) => 
+        {
+          // alert(JSON.stringify(data[0].data_var));
+          setName(data[0].data_var);
+        })
         .catch((error) => {
           alert("Error in responce. " + error);
         });
     } catch (error) {
-      alert("Error in try. " + error);
+      alert("Error in try." + error);
     }
+  }
+
+  async function downloadFile(url: string){
+    Linking.openURL(url);
   }
 
   return (
@@ -139,10 +153,10 @@ const EHSState = () => {
                       <ScrollView>
                         <Box safeArea alignItems="center">
                           <Box w="80" mb="3">
-                            {state &&
-                              state.length > 0 &&
-                              state.map((state, index) => (
-                                <Box
+                          {name &&
+                              name.length > 0 &&
+                              name.map((name, index) => (
+                                <Box key={"EHSState" + index}
                                   w="80"
                                   h="auto"
                                   bg={Colors.onPrimary}
@@ -157,16 +171,12 @@ const EHSState = () => {
                                   <Text
                                     style={{ textTransform: "capitalize" }}
                                     fontSize="md"
-                                    key={index}
                                   >
-                                    {state}
+                                    {name[0]}
                                   </Text>
                                   {/* ))} */}
                                   <Box pt={3}>
-                                    <Pressable
-                                      onPress={onOpen}
-                                      position="relative"
-                                    >
+                                    <Pressable>
                                       {({ isHovered, isPressed }) => {
                                         return (
                                           <Box
@@ -201,13 +211,14 @@ const EHSState = () => {
                                             borderWidth="1"
                                             borderColor={Colors.text}
                                           >
-                                            <Text
+                                            {/* <Text
                                               color={Colors.onPrimary}
                                               style={styles.text1}
                                               pt="1"
                                             >
                                               Click Here to Download
-                                            </Text>
+                                            </Text> */}
+                                            <BareActEHSStateView sname={name[0]} />
                                           </Box>
                                         );
                                       }}

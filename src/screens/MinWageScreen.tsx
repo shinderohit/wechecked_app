@@ -2,6 +2,7 @@ import Colors from "../../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../navigation/types";
 import DataTable from "../../components/Table";
+import {tableDataSample as tableDataSamplea} from "../../components/Table";
 import { StyleSheet } from "react-native";
 import {
   Box,
@@ -32,9 +33,29 @@ const MinWageScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [state, setState] = useState([]);
   const [industry, setIndustry] = useState([]);
+  const [date_var, setDate] = useState([]);
+  
+  //Avinash Start Code
+  let [selectedstateOption, selectedStateOption] = React.useState('');
+  let [selectedindustryOption, selectedIndustryOption] = React.useState('');
+  let [selecteddateOption, selectedDateOption] = React.useState('');
+
+  let [mwstate, MWState] = React.useState('');
+  let [MWnotificationdate, MWNotificationDate] = React.useState('');
+  let [mwindustry, MWIndustry] = React.useState('');
+  let [mwapplicabledate, MWApplicableDate] = React.useState('');
+  let [mwenddate, MWEndDate] = React.useState('');
+  let [mwtableheaders, MWTableHeaders] = React.useState('');
+  let [mwtablebody, MWTableBody] = React.useState('');
+  
+  let [stateid] = React.useState('MinState');
+  let [industryid] = React.useState('minIndustry');
+  let [dateid] = React.useState('minDate');
+
+  //Avinash end Code
+
   useEffect(() => {
     getState();
-    getIndustry();
   }, []);
 
   async function getState() {
@@ -58,21 +79,99 @@ const MinWageScreen = () => {
       alert("Error in try. " + error);
     }
   }
-
+  
   async function getIndustry() {
     try {
+      
       const response_var = await fetch(
         "https://karmamgmt.com/wecheckbetav0.1/app_new_php/minwage_industry.php",
         {
-          method: "GET",
+          method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            state: selectedstateOption,
+          }),
+          
         }
       )
         .then(async (response) => response.json())
         .then(async (data) => setIndustry(data))
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try. " + error);
+    }
+  }
+
+  async function getDate() {
+    try {
+
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/minwage_date.php",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            state: selectedstateOption,
+            industry: selectedindustryOption,
+          }),
+          
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => setDate(data))
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try. " + error);
+    }
+  }
+
+  async function getminwage() {
+    try {
+        
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/minwage_view.php",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            state: selectedstateOption,
+            industry: selectedindustryOption,
+            applicabledate: selecteddateOption,
+          }),
+          
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) =>
+          {
+            // alert(JSON.stringify(data[6].table_body));
+
+            MWState(data[0].state);
+            MWNotificationDate(data[1].notification_date);
+            MWIndustry(data[2].industryname);
+            MWApplicableDate(data[3].applicable_date);
+            MWEndDate(data[4].end_date);
+            
+            tableDataSamplea.tableHead = data[5].table_headers;
+            tableDataSamplea.tableData = data[6].table_body;
+            
+            setShowModal(true);
+            
+          }
+        )
         .catch((error) => {
           alert("Error in responce. " + error);
         });
@@ -90,13 +189,6 @@ const MinWageScreen = () => {
               <Box
                 w={100}
                 h="24"
-                // bg={
-                //   isPressed
-                //     ? Colors.text
-                //     : isHovered
-                //     ? "coolGray.200"
-                //     : Colors.text
-                // }
                 p="2"
                 style={{
                   transform: [
@@ -104,20 +196,6 @@ const MinWageScreen = () => {
                       scale: isPressed || isHovered ? 0.96 : 1,
                     },
                   ],
-                  // borderBottomRightRadius: 70,
-                  // borderBottomLeftRadius: 10,
-                  // borderTopLeftRadius: 10,
-                  // borderTopRightRadius: 10,
-                  // borderRadius: 50,
-                  // shadowColor: "#000",
-                  // shadowOffset: {
-                  //   width: 0,
-                  //   height: 5,
-                  // },
-                  // shadowOpacity: 0.34,
-                  // shadowRadius: 6.27,
-
-                  // elevation: 10,
                 }}
               >
                 <VStack
@@ -168,6 +246,7 @@ const MinWageScreen = () => {
                             borderTopWidth={0}
                             minWidth="300"
                             h="10"
+                            onValueChange={(itemValue) => selectedStateOption(itemValue)}
                             color={Colors.primary}
                             fontSize="sm"
                             rounded={10}
@@ -194,7 +273,7 @@ const MinWageScreen = () => {
                               state.length > 0 &&
                               state.map((state, index) => (
                                 <Select.Item
-                                  key={state}
+                                  key={stateid + index}
                                   label={state}
                                   value={state}
                                 />
@@ -223,6 +302,8 @@ const MinWageScreen = () => {
                             borderTopWidth={0}
                             minWidth="300"
                             h="10"
+                            onOpen={getIndustry}
+                            onValueChange={(itemValue) => selectedIndustryOption(itemValue)}
                             color={Colors.primary}
                             fontSize="sm"
                             rounded={10}
@@ -240,7 +321,7 @@ const MinWageScreen = () => {
                               industry.length > 0 &&
                               industry.map((industry, index) => (
                                 <Select.Item
-                                  key={industry}
+                                  key={industryid + index}
                                   label={industry}
                                   value={industry}
                                 />
@@ -267,6 +348,8 @@ const MinWageScreen = () => {
                             borderTopWidth={0}
                             minWidth="300"
                             h="10"
+                            onOpen={getDate}
+                            onValueChange={(itemValue) => selectedDateOption(itemValue)}
                             color={Colors.primary}
                             fontSize="sm"
                             rounded={10}
@@ -279,7 +362,15 @@ const MinWageScreen = () => {
                             }}
                             mt="1"
                           >
-                            <Select.Item label="Web Development" value="web" />
+                            {date_var &&
+                              date_var.length > 0 &&
+                              date_var.map((date_var, index) => (
+                                <Select.Item
+                                  key={dateid + index}
+                                  label={date_var}
+                                  value={date_var}
+                                />
+                              ))}
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!
@@ -287,19 +378,13 @@ const MinWageScreen = () => {
                         </Box>
 
                         <Box alignItems="center" pt="10">
-                          <Pressable onPress={() => setShowModal(true)}>
+                          <Pressable onPress={() => getminwage()}>
                             {({ isHovered, isPressed }) => {
                               return (
                                 <Box
                                   alignItems="center"
                                   minWidth="300"
-                                  // bgColor={
-                                  //   isPressed
-                                  //     ? "#3E4095"
-                                  //     : isHovered
-                                  //     ? "#3E4095"
-                                  //     : "#3E4095"
-                                  // }
+                                  
                                   style={{
                                     transform: [
                                       {
@@ -355,23 +440,25 @@ const MinWageScreen = () => {
                                           <HStack>
                                             <Text bold>Minimum Wages : </Text>
                                             <Text ml={2}>
-                                              Andaman and Nicobar Islands
+                                              {mwstate}
                                             </Text>
                                           </HStack>
                                           <HStack>
                                             <Text bold>
                                               Notification Date :{" "}
                                             </Text>
-                                            <Text ml={2}>29-12-2022</Text>
+                                            <Text ml={2}>
+                                              {MWnotificationdate}
+                                            </Text>
                                           </HStack>
                                           <HStack>
                                             <Text bold>Industry Name : </Text>
-                                            <Text ml={2}>All Industries</Text>
+                                            <Text ml={2}>{mwindustry}</Text>
                                           </HStack>
                                           <HStack>
                                             <Text bold>Applicable Date : </Text>
                                             <Text ml={2}>
-                                              01-01-2023 TO 30-06-2023
+                                            {mwapplicabledate} TO {mwenddate}
                                             </Text>
                                           </HStack>
                                           <Divider mt={9} />

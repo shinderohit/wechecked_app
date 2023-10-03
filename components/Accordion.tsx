@@ -10,9 +10,9 @@ import Colors from "../constants/Colors";
 
 interface AccordionProps {
   title: string;
-  content: string;
+  quation_ans: string[];
 }
-const Accordion = ({ title, content }: AccordionProps) => {
+const Accordion = ({ title, quation_ans}: AccordionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const animatedValue = useState(new Animated.Value(0))[0];
@@ -42,9 +42,12 @@ const Accordion = ({ title, content }: AccordionProps) => {
           overflow: "hidden",
         }}
       >
-        <View style={styles.content}>
-          <Text>{content}</Text>
-        </View>
+        {quation_ans.map((quation_ans, index) => (
+          <View key={"Acco" + index} style={styles.content}>
+            <Text style={styles.title}>{quation_ans.question}</Text>
+            <Text>{quation_ans.answer}</Text>
+          </View>
+        ))} 
       </Animated.View>
     </View>
   );
@@ -66,6 +69,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
+    fontWeight: "bold",
+  },
+  quation: {
+    fontSize: 14,
     fontWeight: "bold",
   },
   content: {

@@ -19,6 +19,7 @@ import {
   HStack,
   Input,
   useDisclose,
+  ScrollView,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import Accordion from "../../components/Accordion";
@@ -28,6 +29,39 @@ const FAQScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [name, setName] = useState<any[]>([]);
+
+  useEffect(() => {
+    getName();
+  }, []);
+
+  async function getName() {
+    try {
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/faq_view.php",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          }, 
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => 
+        {
+          // alert(JSON.stringify(data[2].qa));
+          setName(data);
+        })
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try." + error);
+    }
+  }
+
   return (
     <VStack>
       <Box flex={1} alignItems="center">
@@ -37,13 +71,6 @@ const FAQScreen = () => {
               <Box
                 w={100}
                 h="24"
-                // bg={
-                //   isPressed
-                //     ? Colors.text
-                //     : isHovered
-                //     ? "coolGray.200"
-                //     : Colors.text
-                // }
                 p="2"
                 style={{
                   transform: [
@@ -51,19 +78,6 @@ const FAQScreen = () => {
                       scale: isPressed ? 0.96 : 1,
                     },
                   ],
-                  // borderBottomRightRadius: 70,
-                  // borderBottomLeftRadius: 10,
-                  // borderTopLeftRadius: 10,
-                  // borderTopRightRadius: 10,
-                  // borderRadius: 50,
-                  // shadowColor: "black",
-                  // shadowOffset: {
-                  //   width: 0,
-                  //   height: 6,
-                  // },
-                  // shadowOpacity: 0.39,
-                  // shadowRadius: 8.3,
-                  // elevation: 13,
                 }}
               >
                 <VStack
@@ -97,7 +111,7 @@ const FAQScreen = () => {
                       FAQs
                     </Text>
                   </HStack>
-                  <Actionsheet.Content bg={Colors.text} pb={48}>
+                  <Actionsheet.Content bg={Colors.text} pb={5}>
                     <Center>
                       <Box
                         safeArea
@@ -132,41 +146,19 @@ const FAQScreen = () => {
                             }
                           />
                         </Box>
-                        <Box w="80">
-                          <Accordion
-                            title="The Building and Other Construction Workers' (Regulation of Employment and Conditions of Service) Act, 1996"
-                            content="Who does the Act apply?
-It applies to every establishment which employs or had employed on any day of the preceding twelve months, ten or more building workers in any building or other construction work.
-Who is required to obtain Registration Certificate?
-Every employer shall:
-• In relation to an establishment to which this Act applies on its commencement, within a period of sixty days from such commencement: and
-• In relation to any other establishment to which this Act may be applicable at any time after such commencement, within a period of sixty days from the date on which this Act becomes applicable to such establishment.
-
-Provided that the registering officer may entertain any such application after the expiry of the periods aforesaid, if he is satisfied that the applicant was prevented by sufficient cause from making the application within such period."
-                          />
-                          <Accordion
-                            title="The Building and Other Construction Workers' (Regulation of Employment and Conditions of Service) Act, 1996"
-                            content="Who does the Act apply?
-It applies to every establishment which employs or had employed on any day of the preceding twelve months, ten or more building workers in any building or other construction work.
-Who is required to obtain Registration Certificate?
-Every employer shall:
-• In relation to an establishment to which this Act applies on its commencement, within a period of sixty days from such commencement: and
-• In relation to any other establishment to which this Act may be applicable at any time after such commencement, within a period of sixty days from the date on which this Act becomes applicable to such establishment.
-
-Provided that the registering officer may entertain any such application after the expiry of the periods aforesaid, if he is satisfied that the applicant was prevented by sufficient cause from making the application within such period."
-                          />
-                          <Accordion
-                            title="The Building and Other Construction Workers' (Regulation of Employment and Conditions of Service) Act, 1996"
-                            content="Who does the Act apply?
-It applies to every establishment which employs or had employed on any day of the preceding twelve months, ten or more building workers in any building or other construction work.
-Who is required to obtain Registration Certificate?
-Every employer shall:
-• In relation to an establishment to which this Act applies on its commencement, within a period of sixty days from such commencement: and
-• In relation to any other establishment to which this Act may be applicable at any time after such commencement, within a period of sixty days from the date on which this Act becomes applicable to such establishment.
-
-Provided that the registering officer may entertain any such application after the expiry of the periods aforesaid, if he is satisfied that the applicant was prevented by sufficient cause from making the application within such period."
-                          />
-                        </Box>
+                        <ScrollView>
+                        {name &&
+                              name.length > 0 &&
+                              name.map((name, index) => (
+                          <Box key={"topic" + index} w="80">
+                              <Accordion
+                                title={name.topic}
+                                quation_ans={name.qa}
+                                
+                              />
+                            </Box>
+                          ))}
+                        </ScrollView>
                       </Box>
                     </Center>
                   </Actionsheet.Content>

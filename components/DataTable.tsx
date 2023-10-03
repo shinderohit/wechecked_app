@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { Table, Row } from "react-native-table-component";
 import Colors from "../constants/Colors";
@@ -86,7 +86,10 @@ const tableDataSample = {
   ],
 };
 const DataTable_1 = () => {
+  
   const [data, setData] = React.useState(tableDataSample);
+  const [datatableid] = useState("DataTable");
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal={true}>
@@ -112,7 +115,7 @@ const DataTable_1 = () => {
             >
               {data.tableData.map((rowData, index) => (
                 <Row
-                  key={index}
+                  key={datatableid + index}
                   data={rowData}
                   widthArr={data.widthArr}
                   style={styles.rowSection}

@@ -6,7 +6,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedInput = Animated.createAnimatedComponent(TextInput);
 
 export default function Donut({
-  percentage = 75,
+  percentage = 1003198,
   radius = 70,
   strokeWidth = 10,
   strokeColor = "#fff",
@@ -15,7 +15,7 @@ export default function Donut({
   text = "Donut",
   duration = 5000,
   delay = 500,
-  max = 100,
+  max = 2000000,
 }) {
   const animatedValue = React.useRef(new Animated.Value(0)).current;
   const halfCircle = radius + strokeWidth;

@@ -2,7 +2,7 @@ import Colors from "../../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../navigation/types";
 import DataTable from "../../components/Table";
-import { StyleSheet } from "react-native";
+import { Linking, StyleSheet } from "react-native";
 import {
   Box,
   Text,
@@ -21,6 +21,7 @@ import {
   Divider,
   Modal,
   useDisclose,
+  ScrollView,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, Component, useEffect } from "react";
@@ -29,8 +30,13 @@ const ComplianceNotScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [showModal, setShowModal] = useState(false);
+
+  let [selectedstateOption, selectedStateOption] = React.useState('');
+  let [selectedindustryOption, selectedIndustryOption] = React.useState('');
+
   const [state, setState] = useState([]);
   const [industry, setIndustry] = useState([]);
+  const [compnot, setCompNot] = useState([]);
 
   useEffect(() => {
     getState();
@@ -81,6 +87,41 @@ const ComplianceNotScreen = () => {
     }
   }
 
+  async function getCompNot() {
+    try {
+
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/compl_notify.php",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },          
+          body: JSON.stringify({
+            state: selectedstateOption,
+            industry: selectedindustryOption,
+          }),
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => 
+          {
+            // alert(JSON.stringify(data));
+            setCompNot(data);
+            setShowModal(true);
+          }
+        )
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try. " + error);
+    }
+  }
+  async function downloadFile(url: string){
+    Linking.openURL(url);
+  }
   return (
     <VStack>
       <Box flex={1} alignItems="center">
@@ -90,13 +131,6 @@ const ComplianceNotScreen = () => {
               <Box
                 w={100}
                 h="24"
-                // bg={
-                //   isPressed
-                //     ? Colors.text
-                //     : isHovered
-                //     ? "coolGray.200"
-                //     : Colors.text
-                // }
                 p="2"
                 style={{
                   transform: [
@@ -104,19 +138,6 @@ const ComplianceNotScreen = () => {
                       scale: isPressed ? 0.96 : 1,
                     },
                   ],
-                  // borderBottomRightRadius: 70,
-                  // borderBottomLeftRadius: 10,
-                  // borderTopLeftRadius: 10,
-                  // borderTopRightRadius: 10,
-                  // borderRadius: 50,
-                  // shadowColor: "black",
-                  // shadowOffset: {
-                  //   width: 0,
-                  //   height: 6,
-                  // },
-                  // shadowOpacity: 0.39,
-                  // shadowRadius: 8.3,
-                  // elevation: 13,
                 }}
               >
                 <VStack
@@ -167,6 +188,7 @@ const ComplianceNotScreen = () => {
                             borderTopWidth={0}
                             minWidth="300"
                             h="10"
+                            onValueChange={(itemValue) => selectedStateOption(itemValue)}
                             color={Colors.primary}
                             fontSize="sm"
                             rounded={10}
@@ -193,7 +215,7 @@ const ComplianceNotScreen = () => {
                               state.length > 0 &&
                               state.map((state, index) => (
                                 <Select.Item
-                                  key={state}
+                                  key={"compNotState" + index}
                                   label={state}
                                   value={state}
                                 />
@@ -222,6 +244,7 @@ const ComplianceNotScreen = () => {
                             borderTopWidth={0}
                             minWidth="300"
                             h="10"
+                            onValueChange={(itemValue) => selectedIndustryOption(itemValue)}
                             color={Colors.primary}
                             fontSize="sm"
                             rounded={10}
@@ -239,7 +262,7 @@ const ComplianceNotScreen = () => {
                               industry.length > 0 &&
                               industry.map((industry, index) => (
                                 <Select.Item
-                                  key={industry}
+                                  key={"comNotIndu" + index}
                                   label={industry}
                                   value={industry}
                                 />
@@ -251,19 +274,12 @@ const ComplianceNotScreen = () => {
                         </Box>
 
                         <Box alignItems="center" pt="10">
-                          <Pressable onPress={() => setShowModal(true)}>
+                          <Pressable onPress={() => getCompNot()}>
                             {({ isHovered, isPressed }) => {
                               return (
                                 <Box
                                   alignItems="center"
                                   minWidth="300"
-                                  // bgColor={
-                                  //   isPressed
-                                  //     ? "#3E4095"
-                                  //     : isHovered
-                                  //     ? "#3E4095"
-                                  //     : "#3E4095"
-                                  // }
                                   style={{
                                     transform: [
                                       {
@@ -298,12 +314,172 @@ const ComplianceNotScreen = () => {
                                     >
                                       <Modal.CloseButton />
                                       <Modal.Header>
-                                        Government Address
+                                        Compliance Notifications
                                       </Modal.Header>
                                       <Modal.Body>
-                                        <VStack>
-                                          <DataTable_1 />
-                                        </VStack>
+                                        <ScrollView>
+                                          <Center>
+                                            <VStack space={3}>
+                                            {compnot &&
+                                              compnot.length > 0 &&
+                                              compnot.map((compnot, index) => (
+                                              <Box key={"compNot" + index}
+                                                  bg={Colors.gray}
+                                                  h="auto"
+                                                  w="72"
+                                                  rounded={20}
+                                                  shadow={5}
+                                                  p={5}
+                                                  my={3}>
+                                                  <Box mb={2}>
+                                                    <Text
+                                                      fontSize="md"
+                                                      color={Colors.primary}
+                                                    >
+                                                      Published On
+                                                    </Text>
+                                                    <Text
+                                                      fontSize="sm"
+                                                      color={Colors.background}
+                                                    >
+                                                      {compnot[0]}
+                                                    </Text>
+                                                  </Box>
+                                                  <Box mb={2}>
+                                                    <Text
+                                                      fontSize="md"
+                                                      color={Colors.primary}
+                                                    >
+                                                      Applicable From
+                                                    </Text>
+                                                    <Text
+                                                      fontSize="sm"
+                                                      color={Colors.background}
+                                                    >
+                                                      {compnot[1]}
+                                                    </Text>
+                                                  </Box>
+                                                  <Box mb={2}>
+                                                    <Text
+                                                      fontSize="md"
+                                                      color={Colors.primary}
+                                                    >
+                                                      State Name
+                                                    </Text>
+                                                    <Text
+                                                      fontSize="sm"
+                                                      color={Colors.background}
+                                                    >
+                                                      {compnot[2]}
+                                                    </Text>
+                                                  </Box>
+                                                  <Box mb={2}>
+                                                    <Text
+                                                      fontSize="md"
+                                                      color={Colors.primary}
+                                                    >
+                                                      Industry Name
+                                                    </Text>
+                                                    <Text
+                                                      fontSize="sm"
+                                                      color={Colors.background}
+                                                    >
+                                                      {compnot[3]}
+                                                    </Text>
+                                                  </Box>
+                                                  <Box mb={2}>
+                                                    <Text
+                                                      fontSize="md"
+                                                      color={Colors.primary}
+                                                    >
+                                                      Applicable On
+                                                    </Text>
+                                                    <Text
+                                                      fontSize="sm"
+                                                      color={Colors.background}
+                                                    >
+                                                      {compnot[4]}
+                                                    </Text>
+                                                  </Box>
+                                                  <Box mb={2}>
+                                                    <Text
+                                                      fontSize="md"
+                                                      color={Colors.primary}
+                                                    >
+                                                      Title
+                                                    </Text>
+                                                    <Text
+                                                      fontSize="sm"
+                                                      color={Colors.background}
+                                                    >
+                                                      {compnot[5]}
+                                                    </Text>
+                                                  </Box>
+                                                  <Box mb={2}>
+                                                    <Text
+                                                      fontSize="md"
+                                                      color={Colors.primary}
+                                                    >
+                                                      Content
+                                                    </Text>
+                                                    <Text
+                                                      fontSize="sm"
+                                                      color={Colors.background}
+                                                    >
+                                                      {compnot[6]}
+                                                    </Text>
+                                                  </Box>
+                                                  <Pressable onPress={() => downloadFile(compnot[7])}>
+                                                    {({
+                                                      isHovered,
+                                                      isPressed,
+                                                    }) => {
+                                                      return (
+                                                        <Box
+                                                          alignItems="center"
+                                                          bgColor={
+                                                            isPressed
+                                                              ? "#353841"
+                                                              : isHovered
+                                                              ? "#353841"
+                                                              : "#353841"
+                                                          }
+                                                          style={{
+                                                            transform: [
+                                                              {
+                                                                scale: isPressed
+                                                                  ? 0.96
+                                                                  : 1,
+                                                              },
+                                                            ],
+                                                          }}
+                                                          bg={Colors.primary}
+                                                          shadow={5}
+                                                          borderWidth="1"
+                                                          borderColor={
+                                                            Colors.primary
+                                                          }
+                                                          h="auto"
+                                                          rounded={5}
+                                                        >
+                                                          <Text
+                                                            color={
+                                                              Colors.onPrimary
+                                                            }
+                                                            fontSize="md"
+                                                          >
+                                                            Click Here to
+                                                            Download!
+                                                          </Text>
+                                                        </Box>
+                                                      );
+                                                    }}
+                                                  </Pressable>
+                                                </Box>
+                                                ))}
+                                            </VStack>
+                                          </Center>
+                                        </ScrollView>
                                       </Modal.Body>
                                     </Modal.Content>
                                   </Modal>

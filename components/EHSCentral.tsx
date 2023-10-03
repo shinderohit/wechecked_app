@@ -1,7 +1,7 @@
 import Colors from "../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../src/navigation/types";
-import { StyleSheet } from "react-native";
+import { Linking, StyleSheet } from "react-native";
 import {
   Box,
   Text,
@@ -31,6 +31,8 @@ const EHSCentral = () => {
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
 
+  const [ehscentralid] = useState("ehscentral");
+
   useEffect(() => {
     getName();
   }, []);
@@ -38,7 +40,7 @@ const EHSCentral = () => {
   async function getName() {
     try {
       const response_var = await fetch(
-        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/bare_central.php",
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/bare_ehs_central.php",
         {
           method: "GET",
           headers: {
@@ -48,10 +50,10 @@ const EHSCentral = () => {
         }
       )
         .then(async (response) => response.json())
-        .then(async (data) => setName(data))
-        .then((responseJson) => {
-          setFilteredDataSource(responseJson);
-          setMasterDataSource(responseJson);
+        .then(async (data) => 
+        {
+          // alert(JSON.stringify(data[0].data_var));
+          setName(data[0].data_var);
         })
         .catch((error) => {
           alert("Error in responce. " + error);
@@ -61,28 +63,9 @@ const EHSCentral = () => {
     }
   }
 
-  const searchFilterFunction = (text: any) => {
-    // Check if searched text is not blank
-    if (text) {
-      // Inserted text is not blank
-      // Filter the masterDataSource
-      // Update FilteredDataSource
-      const newData = masterDataSource.filter(function (item) {
-        const itemData = item.title
-          ? item.title.toUpperCase()
-          : "".toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilteredDataSource(newData);
-      setSearch(text);
-    } else {
-      // Inserted text is blank
-      // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(masterDataSource);
-      setSearch(text);
-    }
-  };
+  async function downloadFile(url: string){
+    Linking.openURL(url);
+  }
 
   const getItem = (item: any) => {
     // Function for click on an item
@@ -152,7 +135,8 @@ const EHSCentral = () => {
                           color={Colors.onPrimary}
                           placeholder="Search Here"
                           w="80"
-                          onChangeText={(text) => searchFilterFunction(text)}
+                          // onChangeText={(text) => searchFilterFunction(text)}
+                          onChangeText={(text) => alert(text)}
                           value={search}
                           fontSize="md"
                           height="10"
@@ -179,7 +163,7 @@ const EHSCentral = () => {
                             {name &&
                               name.length > 0 &&
                               name.map((name, index) => (
-                                <Box
+                                <Box key={"EHSCentral" + index}
                                   w="80"
                                   h="auto"
                                   bg={Colors.onPrimary}
@@ -194,17 +178,13 @@ const EHSCentral = () => {
                                   <Text
                                     style={{ textTransform: "capitalize" }}
                                     fontSize="md"
-                                    key={index}
-                                    data={filteredDataSource}
+                                    // data={filteredDataSource}
                                   >
-                                    {name}
+                                    {name[0]}
                                   </Text>
                                   {/* ))} */}
                                   <Box pt={3}>
-                                    <Pressable
-                                      onPress={onOpen}
-                                      position="relative"
-                                    >
+                                    <Pressable onPress={() => downloadFile(name[1])}>
                                       {({ isHovered, isPressed }) => {
                                         return (
                                           <Box
@@ -264,16 +244,6 @@ const EHSCentral = () => {
           }}
         </Pressable>
       </Box>
-      {/* <Box>
-        <Text
-          style={styles.text2}
-          color={Colors.onPrimary}
-          textAlign="center"
-          w={90}
-        >
-          Bare Acts
-        </Text>
-      </Box> */}
     </VStack>
   );
 };

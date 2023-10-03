@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../navigation/types";
 import DataTable from "../../components/Table";
 import { StyleSheet } from "react-native";
+import { tableDataSample as tableDataSamplea } from "../../components/Table";
 import {
   Box,
   Text,
@@ -31,6 +32,12 @@ const GovAddressScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [state, setState] = useState([]);
   const [law, setLaw] = useState([]);
+
+  let [selectedstateOption, selectedStateOption] = React.useState("");
+  let [selectedlawOption, selectedLawOption] = React.useState("");
+
+  let [stateid] = React.useState("GovAddState");
+  let [lawid] = React.useState("GovAddLaw");
 
   useEffect(() => {
     getState();
@@ -81,6 +88,39 @@ const GovAddressScreen = () => {
     }
   }
 
+  async function getgovadd() {
+    try {
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/govt_add_view.php",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            state: selectedstateOption,
+            law: selectedlawOption,
+          }),
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => {
+          // alert(JSON.stringify(data[1].table_body));
+
+          tableDataSamplea.tableHead = data[0].table_headers;
+          tableDataSamplea.tableData = data[1].table_body;
+
+          setShowModal(true);
+        })
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try. " + error);
+    }
+  }
+
   return (
     <VStack>
       <Center>
@@ -91,13 +131,6 @@ const GovAddressScreen = () => {
                 <Box
                   w={100}
                   h="24"
-                  // bg={
-                  //   isPressed
-                  //     ? Colors.text
-                  //     : isHovered
-                  //     ? "coolGray.200"
-                  //     : Colors.text
-                  // }
                   p="2"
                   style={{
                     transform: [
@@ -105,19 +138,6 @@ const GovAddressScreen = () => {
                         scale: isPressed ? 0.96 : 1,
                       },
                     ],
-                    // borderBottomRightRadius: 70,
-                    // borderBottomLeftRadius: 10,
-                    // borderTopLeftRadius: 10,
-                    // borderTopRightRadius: 10,
-                    // borderRadius: 50,
-                    // shadowColor: "black",
-                    // shadowOffset: {
-                    //   width: 0,
-                    //   height: 6,
-                    // },
-                    // shadowOpacity: 0.39,
-                    // shadowRadius: 8.3,
-                    // elevation: 13,
                   }}
                 >
                   <VStack
@@ -170,6 +190,9 @@ const GovAddressScreen = () => {
                               borderTopWidth={0}
                               minWidth="300"
                               h="10"
+                              onValueChange={(itemValue) =>
+                                selectedStateOption(itemValue)
+                              }
                               color={Colors.primary}
                               fontSize="sm"
                               rounded={10}
@@ -196,7 +219,7 @@ const GovAddressScreen = () => {
                                 state.length > 0 &&
                                 state.map((state, index) => (
                                   <Select.Item
-                                    key={state}
+                                    key={stateid + index}
                                     label={state}
                                     value={state}
                                   />
@@ -225,13 +248,16 @@ const GovAddressScreen = () => {
                               borderTopWidth={0}
                               minWidth="300"
                               h="10"
+                              onValueChange={(itemValue) =>
+                                selectedLawOption(itemValue)
+                              }
                               color={Colors.primary}
                               fontSize="sm"
                               rounded={10}
                               marginTop={2}
                               borderColor={Colors.text}
-                              accessibilityLabel="Choose Industries"
-                              placeholder="Choose Industries"
+                              accessibilityLabel="Choose Law"
+                              placeholder="Choose Law"
                               _selectedItem={{
                                 bg: "teal.600",
                                 endIcon: <CheckIcon size={3} />,
@@ -242,7 +268,7 @@ const GovAddressScreen = () => {
                                 law.length > 0 &&
                                 law.map((law, index) => (
                                   <Select.Item
-                                    key={law}
+                                    key={lawid + index}
                                     label={law}
                                     value={law}
                                   />
@@ -254,19 +280,12 @@ const GovAddressScreen = () => {
                           </Box>
 
                           <Box alignItems="center" pt="10">
-                            <Pressable onPress={() => setShowModal(true)}>
+                            <Pressable onPress={() => getgovadd()}>
                               {({ isHovered, isPressed }) => {
                                 return (
                                   <Box
                                     alignItems="center"
                                     minWidth="300"
-                                    // bgColor={
-                                    //   isPressed
-                                    //     ? "#3E4095"
-                                    //     : isHovered
-                                    //     ? "#3E4095"
-                                    //     : "#3E4095"
-                                    // }
                                     style={{
                                       transform: [
                                         {
@@ -305,7 +324,22 @@ const GovAddressScreen = () => {
                                         </Modal.Header>
                                         <Modal.Body>
                                           <VStack>
-                                            <DataTable_1 />
+                                            <HStack justifyContent="space-between">
+                                              <Image
+                                                source={require("../../assets/kmlogopdf.png")}
+                                                alt="Alternate Text"
+                                                w="32"
+                                                h="32"
+                                              />
+                                              <Image
+                                                source={require("../../assets/icon.png")}
+                                                alt="Alternate Text"
+                                                w="24"
+                                                h="24"
+                                              />
+                                            </HStack>
+                                            <Divider mt={9} />
+                                            <DataTable />
                                           </VStack>
                                         </Modal.Body>
                                       </Modal.Content>

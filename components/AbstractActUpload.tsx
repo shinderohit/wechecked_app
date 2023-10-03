@@ -119,11 +119,16 @@ const AbstractActUpload = () => {
                             }}
                           >
                             <Select.Item
+                              key="adminabsactupload1"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminabsactupload2"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage
                             leftIcon={<WarningOutlineIcon size="xs" />}
@@ -162,11 +167,16 @@ const AbstractActUpload = () => {
                             mt="1"
                           >
                             <Select.Item
+                              key="adminabsactupload3"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminabsactupload4"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!
@@ -202,11 +212,16 @@ const AbstractActUpload = () => {
                             mt="1"
                           >
                             <Select.Item
+                              key="adminabsactupload5"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminabsactupload6"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!

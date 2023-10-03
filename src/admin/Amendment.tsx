@@ -251,11 +251,16 @@ const Amendment = () => {
                             }}
                           >
                             <Select.Item
+                              key="adminamendment1"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminamendment2"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage
                             leftIcon={<WarningOutlineIcon size="xs" />}

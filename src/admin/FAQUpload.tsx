@@ -251,11 +251,16 @@ const FAQUpload = () => {
                             }}
                           >
                             <Select.Item
+                              key="adminfaqupload1"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="adminfaqupload2"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage
                             leftIcon={<WarningOutlineIcon size="xs" />}

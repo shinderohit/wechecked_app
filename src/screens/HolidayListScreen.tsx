@@ -1,7 +1,7 @@
 import Colors from "../../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../navigation/types";
-import { StyleSheet } from "react-native";
+import { Linking, StyleSheet } from "react-native";
 import {
   Box,
   Text,
@@ -21,9 +21,48 @@ import {
   ScrollView,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 const HolidayListScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { isOpen, onOpen, onClose } = useDisclose();
+  const [name, setName] = useState([]);
+
+
+  useEffect(() => {
+    getName();
+  }, []);
+
+  async function getName() {
+    try {
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/holiday_list.php",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => 
+        {
+          // alert(JSON.stringify(data[0].data_var));
+          setName(data[0].data_var);
+
+        })
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try." + error);
+    }
+  }
+
+  async function downloadFile(url: string){
+    Linking.openURL(url);
+  }
+
   return (
     <VStack>
       <Box flex={1} alignItems="center">
@@ -33,13 +72,6 @@ const HolidayListScreen = () => {
               <Box
                 w={100}
                 h="24"
-                // bg={
-                //   isPressed
-                //     ? Colors.text
-                //     : isHovered
-                //     ? "coolGray.200"
-                //     : Colors.text
-                // }
                 p="2"
                 style={{
                   transform: [
@@ -47,19 +79,6 @@ const HolidayListScreen = () => {
                       scale: isPressed ? 0.96 : 1,
                     },
                   ],
-                  // borderBottomRightRadius: 70,
-                  // borderBottomLeftRadius: 10,
-                  // borderTopLeftRadius: 10,
-                  // borderTopRightRadius: 10,
-                  // borderRadius: 50,
-                  // shadowColor: "black",
-                  // shadowOffset: {
-                  //   width: 0,
-                  //   height: 6,
-                  // },
-                  // shadowOpacity: 0.39,
-                  // shadowRadius: 8.3,
-                  // elevation: 13,
                 }}
               >
                 <VStack
@@ -95,14 +114,17 @@ const HolidayListScreen = () => {
                     <Center>
                       <ScrollView>
                         <Box safeArea alignItems="center">
-                          <Box w="80">
+                        {name &&
+                              name.length > 0 &&                               
+                              name.map((name, index) => (  
+                          <Box key={"HolidayList" + index} w="80">
                             <Text
                               bold
                               fontSize="xl"
                               color={Colors.primary}
                               underline
                             >
-                              Central Hoilday List :
+                              {name[0]} Hoilday List :
                             </Text>
                             <Box
                               w="80"
@@ -115,12 +137,10 @@ const HolidayListScreen = () => {
                               style={styles.shadow}
                             >
                               <Text bold fontSize="md" color={Colors.secondary}>
-                                Central
+                              {name[0]}
                               </Text>
                               <Box pt="5">
-                                <Pressable
-                                  onPress={() => navigation.navigate("Home")}
-                                >
+                              <Pressable onPress={() => downloadFile(name[1])}>
                                   {({ isHovered, isPressed }) => {
                                     return (
                                       <Box
@@ -161,241 +181,8 @@ const HolidayListScreen = () => {
                               </Box>
                             </Box>
                           </Box>
-
-                          <Box w="80" pt="10">
-                            <Text
-                              bold
-                              fontSize="xl"
-                              color={Colors.primary}
-                              underline
-                            >
-                              State Hoilday List :
-                            </Text>
-                            <Box
-                              w="80"
-                              bg={Colors.onPrimary}
-                              p="4"
-                              rounded={10}
-                              mt="5"
-                              borderColor="#ccc"
-                              borderWidth="1"
-                              style={styles.shadow}
-                            >
-                              <Text bold fontSize="md" color={Colors.secondary}>
-                                Andaman and Nicobar
-                              </Text>
-                              <Box pt="5">
-                                <Pressable
-                                  onPress={() => navigation.navigate("Home")}
-                                >
-                                  {({ isHovered, isPressed }) => {
-                                    return (
-                                      <Box
-                                        alignItems="center"
-                                        bgColor={
-                                          isPressed
-                                            ? "#3E4095"
-                                            : isHovered
-                                            ? "#3E4095"
-                                            : "#3E4095"
-                                        }
-                                        style={{
-                                          transform: [
-                                            {
-                                              scale: isPressed ? 0.96 : 1,
-                                            },
-                                          ],
-                                        }}
-                                        bg={Colors.secondary}
-                                        px="50"
-                                        py="1"
-                                        rounded="10"
-                                        shadow={3}
-                                        borderWidth="1"
-                                        borderColor={Colors.secondary}
-                                      >
-                                        <Text
-                                          color={Colors.onPrimary}
-                                          fontWeight="medium"
-                                          fontSize="sm"
-                                        >
-                                          Click Here To Download!
-                                        </Text>
-                                      </Box>
-                                    );
-                                  }}
-                                </Pressable>
-                              </Box>
-                            </Box>
-                            <Box
-                              w="80"
-                              bg={Colors.onPrimary}
-                              p="4"
-                              rounded={10}
-                              mt="8"
-                              borderColor="#ccc"
-                              borderWidth="1"
-                              style={styles.shadow}
-                            >
-                              <Text bold fontSize="md" color={Colors.secondary}>
-                                Andaman and Nicobar
-                              </Text>
-                              <Box pt="5">
-                                <Pressable
-                                  onPress={() => navigation.navigate("Home")}
-                                >
-                                  {({ isHovered, isPressed }) => {
-                                    return (
-                                      <Box
-                                        alignItems="center"
-                                        bgColor={
-                                          isPressed
-                                            ? "#3E4095"
-                                            : isHovered
-                                            ? "#3E4095"
-                                            : "#3E4095"
-                                        }
-                                        style={{
-                                          transform: [
-                                            {
-                                              scale: isPressed ? 0.96 : 1,
-                                            },
-                                          ],
-                                        }}
-                                        bg={Colors.secondary}
-                                        px="50"
-                                        py="1"
-                                        rounded="10"
-                                        shadow={3}
-                                        borderWidth="1"
-                                        borderColor={Colors.secondary}
-                                      >
-                                        <Text
-                                          color={Colors.onPrimary}
-                                          fontWeight="medium"
-                                          fontSize="sm"
-                                        >
-                                          Click Here To Download!
-                                        </Text>
-                                      </Box>
-                                    );
-                                  }}
-                                </Pressable>
-                              </Box>
-                            </Box>
-                            <Box
-                              w="80"
-                              bg={Colors.onPrimary}
-                              p="4"
-                              rounded={10}
-                              mt="8"
-                              borderColor="#ccc"
-                              borderWidth="1"
-                              style={styles.shadow}
-                            >
-                              <Text bold fontSize="md" color={Colors.secondary}>
-                                Andaman and Nicobar
-                              </Text>
-                              <Box pt="5">
-                                <Pressable
-                                  onPress={() => navigation.navigate("Home")}
-                                >
-                                  {({ isHovered, isPressed }) => {
-                                    return (
-                                      <Box
-                                        alignItems="center"
-                                        bgColor={
-                                          isPressed
-                                            ? "#3E4095"
-                                            : isHovered
-                                            ? "#3E4095"
-                                            : "#3E4095"
-                                        }
-                                        style={{
-                                          transform: [
-                                            {
-                                              scale: isPressed ? 0.96 : 1,
-                                            },
-                                          ],
-                                        }}
-                                        bg={Colors.secondary}
-                                        px="50"
-                                        py="1"
-                                        rounded="10"
-                                        shadow={3}
-                                        borderWidth="1"
-                                        borderColor={Colors.secondary}
-                                      >
-                                        <Text
-                                          color={Colors.onPrimary}
-                                          fontWeight="medium"
-                                          fontSize="sm"
-                                        >
-                                          Click Here To Download!
-                                        </Text>
-                                      </Box>
-                                    );
-                                  }}
-                                </Pressable>
-                              </Box>
-                            </Box>
-                            <Box
-                              w="80"
-                              bg={Colors.onPrimary}
-                              p="4"
-                              rounded={10}
-                              mt="8"
-                              borderColor="#ccc"
-                              borderWidth="1"
-                              style={styles.shadow}
-                            >
-                              <Text bold fontSize="md" color={Colors.secondary}>
-                                Andaman and Nicobar
-                              </Text>
-                              <Box pt="5">
-                                <Pressable
-                                  onPress={() => navigation.navigate("Home")}
-                                >
-                                  {({ isHovered, isPressed }) => {
-                                    return (
-                                      <Box
-                                        alignItems="center"
-                                        bgColor={
-                                          isPressed
-                                            ? "#3E4095"
-                                            : isHovered
-                                            ? "#3E4095"
-                                            : "#3E4095"
-                                        }
-                                        style={{
-                                          transform: [
-                                            {
-                                              scale: isPressed ? 0.96 : 1,
-                                            },
-                                          ],
-                                        }}
-                                        bg={Colors.secondary}
-                                        px="50"
-                                        py="1"
-                                        rounded="10"
-                                        shadow={3}
-                                        borderWidth="1"
-                                        borderColor={Colors.secondary}
-                                      >
-                                        <Text
-                                          color={Colors.onPrimary}
-                                          fontWeight="medium"
-                                          fontSize="sm"
-                                        >
-                                          Click Here To Download!
-                                        </Text>
-                                      </Box>
-                                    );
-                                  }}
-                                </Pressable>
-                              </Box>
-                            </Box>
-                          </Box>
+                        
+                        ))}
                         </Box>
                       </ScrollView>
                     </Center>

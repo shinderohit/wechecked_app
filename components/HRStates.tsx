@@ -1,7 +1,7 @@
 import Colors from "../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../src/navigation/types";
-import { StyleSheet } from "react-native";
+import { Linking, StyleSheet } from "react-native";
 import {
   Box,
   Text,
@@ -23,19 +23,25 @@ import {
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, Component, useEffect } from "react";
+import BareActHRStateView from "./BareActHRStateView";
 const HRStates = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [state, setState] = useState([]);
+  const [name, setName] = useState([]);
+  let fruit = "Banana" as const;
+
+
+  const [ehsstateid] = useState("ehsstate");
 
   useEffect(() => {
-    getState();
+    getName();
   }, []);
 
-  async function getState() {
+  async function getName() {
     try {
       const response_var = await fetch(
-        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/hr_state.php",
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/bare_hr_state.php",
         {
           method: "GET",
           headers: {
@@ -45,13 +51,21 @@ const HRStates = () => {
         }
       )
         .then(async (response) => response.json())
-        .then(async (data) => setState(data))
+        .then(async (data) => 
+        {
+          // alert(JSON.stringify(data[0].data_var));
+          setName(data[0].data_var);
+        })
         .catch((error) => {
           alert("Error in responce. " + error);
         });
     } catch (error) {
-      alert("Error in try. " + error);
+      alert("Error in try." + error);
     }
+  }
+
+  async function downloadFile(url: string){
+    Linking.openURL(url);
   }
 
   return (
@@ -139,10 +153,10 @@ const HRStates = () => {
                       <ScrollView>
                         <Box safeArea alignItems="center">
                           <Box w="80" mb="3">
-                            {state &&
-                              state.length > 0 &&
-                              state.map((state, index) => (
-                                <Box
+                            {name &&
+                              name.length > 0 &&
+                              name.map((name, index) => (
+                                <Box key={"HRState" + index}
                                   w="80"
                                   h="auto"
                                   bg={Colors.onPrimary}
@@ -157,9 +171,8 @@ const HRStates = () => {
                                   <Text
                                     style={{ textTransform: "capitalize" }}
                                     fontSize="md"
-                                    key={index}
                                   >
-                                    {state}
+                                    {name[0]}
                                   </Text>
                                   {/* ))} */}
                                   <Box pt={3}>
@@ -201,13 +214,7 @@ const HRStates = () => {
                                             borderWidth="1"
                                             borderColor={Colors.text}
                                           >
-                                            <Text
-                                              color={Colors.onPrimary}
-                                              style={styles.text1}
-                                              pt="1"
-                                            >
-                                              Click Here to Download
-                                            </Text>
+                                            <BareActHRStateView sname={name[0]} />
                                           </Box>
                                         );
                                       }}

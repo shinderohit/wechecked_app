@@ -116,11 +116,16 @@ const CaseLaw = () => {
                             mt="1"
                           >
                             <Select.Item
+                              key="admincaselaw1"
                               color={Colors.secondary}
                               label="test"
                               value="test"
                             />
-                            <Select.Item label="test" value="test" />
+                            <Select.Item 
+                            key="admincaselaw2"
+                            label="test" 
+                            value="test" 
+                            />
                           </Select>
                           {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                     Please make a selection!

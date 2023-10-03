@@ -43,6 +43,7 @@ const CalendarTab = () => {
         onDayPress={(day) => {
           console.log("selected day", day);
         }}
+        
         markedDates={{
           "2022-03-01": { selected: true, marked: true },
           "2023-03-04": { marked: true, color: Colors.secondary },

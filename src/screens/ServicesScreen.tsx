@@ -1,4 +1,5 @@
 import Colors from "../../constants/Colors";
+import { StyleSheet } from "react-native";
 import {
   Box,
   Text,
@@ -11,9 +12,9 @@ import {
   Avatar,
   Icon,
 } from "native-base";
-import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { HomeScreenNavigationProp } from "../navigation/types";
 import MinWageScreen from "./MinWageScreen";
-import ComplianceScreens from "./ComplianceScreen";
 import BareActScreen from "./BareActScreen";
 import AbstractActScreen from "./AbstractActScreen";
 import HolidayListScreen from "./HolidayListScreen";
@@ -26,6 +27,7 @@ import FAQScreen from "./FAQScreen";
 import ComplianceNotScreen from "./ComplianceNotScreen";
 
 const ServicesScreen = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   return (
     <ScrollView bg={Colors.background}>
       <Box alignItems="center" mb="10" mt={5}>
@@ -37,7 +39,48 @@ const ServicesScreen = () => {
             space={5}
             pb="7"
           >
-            <ComplianceScreens />
+            <Pressable
+              onPress={() => navigation.navigate("Compliance")}
+              position="relative"
+            >
+              {({ isHovered, isPressed }) => {
+                return (
+                  <Box
+                    w={100}
+                    h="24"
+                    p="2"
+                    style={{
+                      transform: [
+                        {
+                          scale: isPressed || isHovered ? 0.96 : 1,
+                        },
+                      ],
+                    }}
+                  >
+                    <HStack
+                      alignItems="center"
+                      justifyContent="center"
+                      flexWrap="wrap"
+                    >
+                      <Image
+                        source={require("../../assets/icons/2023.gif")}
+                        alt="Alternate Text"
+                        w="16"
+                        h="16"
+                      />
+                      <Text
+                        style={styles.text2}
+                        color={Colors.onPrimary}
+                        textAlign="center"
+                        w={90}
+                      >
+                        Compliance Calendar
+                      </Text>
+                    </HStack>
+                  </Box>
+                );
+              }}
+            </Pressable>
             <MinWageScreen />
             <ComplianceNotScreen />
           </HStack>
@@ -80,3 +123,13 @@ const ServicesScreen = () => {
 };
 
 export default ServicesScreen;
+
+const styles = StyleSheet.create({
+  text2: {
+    fontWeight: "300",
+    color: Colors.onPrimary,
+    letterSpacing: 0.8,
+    fontSize: 13,
+    bottom: -10,
+  },
+});

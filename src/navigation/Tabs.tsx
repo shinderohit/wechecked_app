@@ -1,23 +1,24 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Colors from "../../constants/Colors";
-import { BottomTabNavigatorParamList } from "./types";
-import HomeStackNavigator from "./HomeStack";
+import { BottomTabNavigatorParamList, HomeScreenNavigationProp } from "./types";
 import NotificationScreen from "../screens/NotificationScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import HomeStackNavigator from "./HomeStack";
+import HomeScreen from "../screens/HomeScreen";
 
 const Tab = createBottomTabNavigator<BottomTabNavigatorParamList>();
 
 const BottomTabs = () => {
   return (
     <Tab.Navigator
-      initialRouteName="HomeStack"
+      initialRouteName="Home"
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: any;
 
-          if (route.name === "HomeStack") {
+          if (route.name === "Home") {
             iconName = focused ? "ios-home" : "ios-home-outline";
             size = 27;
           } else if (route.name === "Menu") {
@@ -53,6 +54,10 @@ const BottomTabs = () => {
           shadowRadius: 8.3,
           elevation: 7,
         },
+        // tabBarVisible:
+        //   route.name !== "Welcome" &&
+        //   route.name !== "Login" &&
+        //   route.name !== "Register",
       })}
     >
       <Tab.Screen
@@ -67,8 +72,8 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        name="HomeStack"
-        component={HomeStackNavigator}
+        name="Home"
+        component={HomeScreen}
         options={{
           headerShown: false,
           headerTintColor: Colors.background,
@@ -81,7 +86,7 @@ const BottomTabs = () => {
         component={NotificationScreen}
         options={{
           headerShown: true,
-          headerTintColor: Colors.primary,
+          headerTintColor: Colors.onPrimary,
           headerStyle: { backgroundColor: Colors.background },
           headerTitleAlign: "center",
           headerShadowVisible: false,

@@ -17,15 +17,12 @@ const MinWageScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const [name, setName] = React.useState("");
   const [state, setState] = useState([]);
-  //   const [industry, setIndustry] = useState([]);
+  let [stateid] = React.useState('BackState');
 
   useEffect(() => {
     getState();
   }, []);
 
-  //   useEffect(() => {
-  //     getIndustry();
-  //   }, []);
 
   async function getState() {
     try {
@@ -48,28 +45,6 @@ const MinWageScreen = () => {
       alert("Error in try. " + error);
     }
   }
-
-  //   async function getIndustry() {
-  //     try {
-  //       const response_var = await fetch(
-  //         "https://karmamgmt.com/wecheckbetav0.1/Industry_extract.php",
-  //         {
-  //           method: "GET",
-  //           headers: {
-  //             Accept: "application/json",
-  //             "Content-Type": "application/json",
-  //           },
-  //         }
-  //       )
-  //         .then(async (response) => response.json())
-  //         .then(async (data) => setIndustry(data))
-  //         .catch((error) => {
-  //           alert("Error in responce. " + error);
-  //         });
-  //     } catch (error) {
-  //       alert("Error in try. " + error);
-  //     }
-  //   }
 
   return (
     <Box
@@ -104,7 +79,7 @@ const MinWageScreen = () => {
               {state &&
                 state.length > 0 &&
                 state.map((state, index) => (
-                  <Select.Item key={index} label={state} value={state} />
+                  <Select.Item key={stateid + index} label={state} value={state} />
                 ))}
             </Select>
             {/* <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
@@ -166,6 +141,7 @@ const MinWageScreen = () => {
               mt="1"
             >
               <Select.Item
+                key="ux1"
                 color={Colors.secondary}
                 label="UX Research"
                 value="ux"

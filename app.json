@@ -1,17 +1,18 @@
 {
   "expo": {
-    "name": "wecheck-app",
-    "slug": "wecheck-app",
+    "name": "Wechecked_app",
+    "slug": "wecheckedapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FFFFFF"
+      "backgroundColor": "#2c2d31"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/5fdd28bc-60c4-4cc6-a7d1-7501ddc28fbf"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -20,6 +21,9 @@
       "bundleIdentifier": "com.karmamgmt.iwechecked",
       "infoPlist": {
         "UIBackgroundModes": ["fetch", "remote-notification"]
+      },
+      "runtimeVersion": {
+        "policy": "sdkVersion"
       }
     },
     "android": {
@@ -28,11 +32,19 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "runtimeVersion": {
+        "policy": "sdkVersion"
       }
     },
-    "plugins": ["@react-native-firebase/app"],
+    "plugins": ["@react-native-firebase/app", "@react-native-firebase/auth"],
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5fdd28bc-60c4-4cc6-a7d1-7501ddc28fbf"
+      }
     }
   }
 }

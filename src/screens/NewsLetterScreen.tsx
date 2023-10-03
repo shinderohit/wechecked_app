@@ -20,6 +20,8 @@ import {
   useDisclose,
 } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
+import MojoNews from "../../components/MojoNews";
+import WeTag from "../../components/WeTag";
 const NewsLetterScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const { isOpen, onOpen, onClose } = useDisclose();
@@ -32,13 +34,6 @@ const NewsLetterScreen = () => {
               <Box
                 w={100}
                 h="24"
-                // bg={
-                //   isPressed
-                //     ? Colors.text
-                //     : isHovered
-                //     ? "coolGray.200"
-                //     : Colors.text
-                // }
                 p="2"
                 style={{
                   transform: [
@@ -46,19 +41,6 @@ const NewsLetterScreen = () => {
                       scale: isPressed ? 0.96 : 1,
                     },
                   ],
-                  // borderBottomRightRadius: 70,
-                  // borderBottomLeftRadius: 10,
-                  // borderTopLeftRadius: 10,
-                  // borderTopRightRadius: 10,
-                  // borderRadius: 50,
-                  // shadowColor: "black",
-                  // shadowOffset: {
-                  //   width: 0,
-                  //   height: 6,
-                  // },
-                  // shadowOpacity: 0.39,
-                  // shadowRadius: 8.3,
-                  // elevation: 13,
                 }}
               >
                 <VStack
@@ -104,41 +86,18 @@ const NewsLetterScreen = () => {
                         <Center>
                           <Box
                             w="80"
+                            h="32"
                             bg={Colors.onPrimary}
                             p="4"
                             rounded={10}
-                            mt="5"
                             shadow={9}
                             alignItems="center"
                           >
-                            <VStack>
-                              <HStack py="3">
-                                <Image
-                                  source={require("../../assets/icons/Mojo.png")}
-                                  alt="Alternate Text"
-                                  w="9"
-                                  h="9"
-                                />
-                                <Text
-                                  bold
-                                  color={Colors.primary}
-                                  fontSize="xl"
-                                  px="2"
-                                >
-                                  MOJO
-                                </Text>
-                                <Text color={Colors.secondary} fontSize="xl">
-                                  "Monthly Journal"
-                                </Text>
-                              </HStack>
-                              <Text fontSize="md" color={Colors.secondary}>
-                                An initiative by Karma Global consists of
-                                Monthly News
-                              </Text>
-                            </VStack>
+                            <MojoNews />
                           </Box>
                           <Box
                             w="80"
+                            h="32"
                             bg={Colors.onPrimary}
                             p="4"
                             rounded={10}
@@ -146,31 +105,7 @@ const NewsLetterScreen = () => {
                             shadow={9}
                             alignItems="center"
                           >
-                            <VStack>
-                              <HStack py="3">
-                                <Image
-                                  source={require("../../assets/icons/WeTag.png")}
-                                  alt="Alternate Text"
-                                  w="9"
-                                  h="9"
-                                />
-                                <Text
-                                  bold
-                                  color={Colors.primary}
-                                  fontSize="xl"
-                                  px="2"
-                                >
-                                  WeTag
-                                </Text>
-                                <Text color={Colors.secondary} fontSize="xl">
-                                  "Weekly Newsletter"
-                                </Text>
-                              </HStack>
-                              <Text fontSize="md" color={Colors.secondary}>
-                                Karma Global's own Compliance related news
-                                magazine.
-                              </Text>
-                            </VStack>
+                            <WeTag />
                           </Box>
                         </Center>
                       </Box>

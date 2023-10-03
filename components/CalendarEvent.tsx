@@ -1,81 +1,145 @@
-// import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
+import { Agenda } from "react-native-calendars";
+import { Card } from "react-native-paper";
+import Colors from "../constants/Colors";
 
-// // import all the components we are going to use
-// import { SafeAreaView, StyleSheet, View, Dimensions } from "react-native";
+const timeToString = (time: any) => {
+  const date = new Date(time);
+  return date.toISOString().split("T")[0];
+};
 
-// //import EventCalendar component 
-// import EventCalendar from 'react-native-events-calendar';
+interface Items {
+  [key: string]: any[];
+}
 
-// //get the size of device
-// let { width } = Dimensions.get("window");
 
-// const App = () => {
-//   const [events, setEvents] = useState([
-//     {
-//       start: "2020-01-01 00:00:00",
-//       end: "2020-01-01 02:00:00",
-//       title: "New Year Party",
-//       summary: "xyz Location",
-//     },
-//     {
-//       start: "2020-01-01 01:00:00",         
-//       end: "2020-01-01 02:00:00",
-//       title: "New Year Wishes",
-//       summary: "Call to every one",
-//     },
-//     {
-//       start: "2020-01-02 00:30:00",
-//       end: "2020-01-02 01:30:00",
-//       title: "Parag Birthday Party",
-//       summary: "Call him",
-//     },
-//     {
-//       start: "2020-01-03 01:30:00",
-//       end: "2020-01-03 02:20:00",
-//       title: "My Birthday Party",
-//       summary: "Lets Enjoy",
-//     },
-//     {
-//       start: "2020-02-04 04:10:00",
-//       end: "2020-02-04 04:40:00",
-//       title: "Engg Expo 2020",
-//       summary: "Expoo Vanue not confirm",
-//     },
-//   ]);
 
-//   const eventClicked = (event:any) => {
-//     //On Click oC a event showing alert from here
-//     alert(JSON.stringify(event));
-//   };
+const CalendarEvent = () => {
+  const [items, setItems] = React.useState<Items>({});
+  const [event_var, setEvent] = useState([]);
+  const now = new Date();
 
-//   return (
-//     <SafeAreaView style={styles.container}>
-//       <View style={styles.container}>
-//         <EventCalendar
-//           eventTapped={eventClicked}
-//           //Function on event press
-//           events={events}
-//           //passing the Array of event
-//           width={width}
-//           //Container width
-//           size={60}
-//           //number of date will render before and after initDate
-//           //(default is 30 will render 30 day before initDate and 29 day after initDate)
-//           initDate={"2020-01-01"}
-//           //show initial date (default is today)
-//           scrollToFirst
-//           //scroll to first event of the day (default true)
-//         />
-//       </View>
-//     </SafeAreaView>
-//   );
-// };
-// export default App;
+  useEffect(() => {
+    getEvents();
+  }, []);
+  
+  async function getEvents() {
+    try {
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/calendar.php",
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (data) => 
+        {
+          // alert(JSON.stringify(data));
+          setEvent(data);
+        })
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try. " + error);
+    }
+  }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
+  const loadItems = (day: any) => {
+    setTimeout(() => {
+      for (let i = -15; i < 85; i++) {
+        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+        const strTime = timeToString(time);
+        
+          for (let j = 0; j < event_var.length; j++) {
+          
+            if(!items[strTime]){
+            if(strTime==event_var[j]["due_date"]){
+          items[strTime] = [];
+            }
+          }
+          }
+          
+          for (let j = 0; j < event_var.length; j++) {
+             
+            if(strTime==event_var[j]["due_date"]){    
+              items[strTime].push({
+                name: event_var[j]["activity"] + "\n" + event_var[j]["applicable_to"] + "\n" + event_var[j]["act"],
+                height: Math.max(10, Math.floor(Math.random() * 150)),
+                day: strTime,
+              });
+            }
+
+          }
+        
+      }
+      const newItems: Items = {};
+      Object.keys(items).forEach((key) => {
+        newItems[key] = items[key];
+      });
+      setItems(newItems);
+    }, 1000);
+  };
+
+  const renderItem = (item: any) => {
+    return (
+      <TouchableOpacity style={styles.item}>
+        <Card>
+          <Card.Content>
+            <View>
+              <Text style={styles.bold}>{item.name}</Text>
+            </View>
+          </Card.Content>
+        </Card>
+      </TouchableOpacity>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <Agenda
+        style={styles.bg}
+        items={items}
+        loadItemsForMonth={loadItems}
+        selected={now.toISOString().split("T")[0]}
+        refreshControl={undefined}
+        showClosingKnob={true}
+        refreshing={false}
+        renderItem={renderItem}
+      />
+      <StatusBar />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  item: {
+    flex: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginRight: 10,
+    marginTop: 17,
+  },
+  bold: {
+    fontWeight: "500",
+  },
+  bg: {
+    backgroundColor: Colors.background,
+  },
+});
+
+export default CalendarEvent;

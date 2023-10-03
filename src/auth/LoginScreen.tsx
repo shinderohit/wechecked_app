@@ -11,7 +11,10 @@ import Layout from "../../constants/Layout";
 import Colors from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { HomeScreenNavigationProp } from "../navigation/types";
+import {
+  HomeScreenNavigationProp,
+  HomeStack1NavigatorParamList,
+} from "../navigation/types";
 import {
   Box,
   Text,
@@ -24,15 +27,69 @@ import {
   Icon,
   Image,
 } from "native-base";
+import HomeScreen from "../screens/HomeScreen";
+
 const { height } = Dimensions.get("window");
 
 const LoginScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const [hidePassword, setHidePassword] = React.useState(true);
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [show, setShow] = React.useState(false);
 
   const togglePasswordVisibility = () => {
     setHidePassword(!hidePassword);
   };
+
+  const handleRegister = () => {
+    if (email === "" || password === "") {
+      () => {
+        alert("Please fill all the fields!");
+      };
+      return;
+    }
+
+    UserLoginFunction();
+  };
+
+  async function UserLoginFunction() {
+    try {
+      const response_var = await fetch(
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/samplelogin.php",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        }
+      )
+        .then(async (response) => response.json())
+        .then(async (response) => {
+          if (JSON.stringify(response) === "1") {
+            navigation.navigate('Home', {email});
+          } 
+          else if(JSON.stringify(response) === "2") {
+            navigation.navigate('Verification', {email});
+          }
+          else {
+            alert(
+              "Filled information is" + " Empty or " + JSON.stringify(response)
+            );
+          }
+        })
+        .catch((error) => {
+          alert("Error in responce. " + error);
+        });
+    } catch (error) {
+      alert("Error in try. " + error);
+    }
+  }
 
   return (
     <Box
@@ -43,15 +100,16 @@ const LoginScreen = () => {
       safeArea
       bg={Colors.background}
     >
-      <ScrollView>
         <ImageBackground
           style={{
             height: height / 2.3,
+          paddingBottom: 0,
           }}
           resizeMode="contain"
           source={require("../../assets/img/Onboarding.png")}
         />
-        <Center mt="-5">
+      <ScrollView>
+        <Center>
           <HStack justifyContent="space-between">
             <Box alignSelf="center" justifyContent="space-between">
               <VStack space={4} alignItems="center">
@@ -75,14 +133,13 @@ const LoginScreen = () => {
                     fontSize="sm"
                     px="3"
                     w={{ base: "100%", md: "100%" }}
-                    // InputLeftElement={
-                    //   <Icon as={<Ionicons name="person" />} size={5} ml="2" color="muted.400" />
-                    // }
+                    value={email}
+                    onChangeText={setEmail}
                     variant="underlined"
                     color={Colors.onPrimary}
                     borderColor={Colors.primary}
                     borderRadius="10"
-                    cursorColor={Colors.primary}
+                    cursorColor={Colors.onPrimary}
                     textContentType="emailAddress"
                     blurOnSubmit
                     autoComplete="email"
@@ -95,8 +152,13 @@ const LoginScreen = () => {
                     fontSize="sm"
                     px="3"
                     w={{ base: "100%", md: "25%" }}
+                    type={show ? "text" : "password"}
+                    value={password}
                     color={Colors.onPrimary}
+                    onChangeText={setPassword}
                     style={styles.text}
+                    cursorColor={Colors.onPrimary}
+                    focusOutlineColor={Colors.onPrimary}
                     InputRightElement={
                       <Pressable onPress={togglePasswordVisibility}>
                         <Icon
@@ -116,7 +178,7 @@ const LoginScreen = () => {
                     autoComplete="password"
                     borderRadius="10"
                     placeholder="Password"
-                    focusOutlineColor={Colors.onPrimary}
+                    autoCapitalize="none"
                   />
                 </Stack>
               </Box>
@@ -134,7 +196,8 @@ const LoginScreen = () => {
               </Box>
               <Box alignItems="center">
                 <Pressable
-                  onPress={() => navigation.navigate("Home")}
+                  // onPress={() => navigation.navigate("Home")}
+                  onPress={UserLoginFunction}
                   style={styles.button}
                 >
                   {({ isHovered, isPressed }) => {

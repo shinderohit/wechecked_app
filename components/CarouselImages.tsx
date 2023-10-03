@@ -18,19 +18,14 @@ const IMG_WIDTH = width * 0.88;
 const IMG_HEIGHT = IMG_WIDTH * 0.6;
 
 const img = [
-  "https://images.pexels.com/photos/14519806/pexels-photo-14519806.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/3257803/pexels-photo-3257803.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/3352860/pexels-photo-3352860.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/6445669/pexels-photo-6445669.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/5760479/pexels-photo-5760479.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/12905016/pexels-photo-12905016.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/4214998/pexels-photo-4214998.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/9203428/pexels-photo-9203428.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/1879864/pexels-photo-1879864.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+  "https://karmamgmt.com/wecheckbetav0.1/app_new_php/img/advexpert.jpg",
+  "https://karmamgmt.com/wecheckbetav0.1/app_new_php/img/minwage.jpg",
+  "https://karmamgmt.com/wecheckbetav0.1/app_new_php/img/wecheck-audit.jpg",
+  
 ];
 
 const resources = img.map((image, index) => ({
-  key: String(index),
+  key: "image" + String(index),
   photo: image,
 }));
 
@@ -89,7 +84,7 @@ const CarouselImages = () => {
                     <Animated.Image
                       source={{ uri: item.photo }}
                       style={{
-                        width: IMG_WIDTH * 2,
+                        width: IMG_WIDTH,
                         height: IMG_HEIGHT,
                         resizeMode: "cover",
                         transform: [{ translateX }],

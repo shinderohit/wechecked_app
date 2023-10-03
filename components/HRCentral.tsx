@@ -1,7 +1,7 @@
 import Colors from "../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { HomeScreenNavigationProp } from "../src/navigation/types";
-import { StyleSheet } from "react-native";
+import { Linking, StyleSheet } from "react-native";
 import {
   Box,
   Text,
@@ -28,6 +28,7 @@ const HRCentral = () => {
   const { isOpen, onOpen, onClose } = useDisclose();
   const [name, setName] = useState([]);
 
+
   useEffect(() => {
     getName();
   }, []);
@@ -35,7 +36,7 @@ const HRCentral = () => {
   async function getName() {
     try {
       const response_var = await fetch(
-        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/hr_central.php",
+        "https://karmamgmt.com/wecheckbetav0.1/app_new_php/bare_hr_central.php",
         {
           method: "GET",
           headers: {
@@ -45,13 +46,21 @@ const HRCentral = () => {
         }
       )
         .then(async (response) => response.json())
-        .then(async (data) => setName(data))
+        .then(async (data) => 
+        {
+          // alert(JSON.stringify(data[0].data_var));
+          setName(data[0].data_var);
+        })
         .catch((error) => {
           alert("Error in responce. " + error);
         });
     } catch (error) {
-      alert("Error in try. " + error);
+      alert("Error in try." + error);
     }
+  }
+
+  async function downloadFile(url: string){
+    Linking.openURL(url);
   }
 
   return (
@@ -142,7 +151,7 @@ const HRCentral = () => {
                             {name &&
                               name.length > 0 &&
                               name.map((name, index) => (
-                                <Box
+                                <Box key={"HRCentral" + index}
                                   w="80"
                                   h="auto"
                                   bg={Colors.onPrimary}
@@ -157,16 +166,12 @@ const HRCentral = () => {
                                   <Text
                                     style={{ textTransform: "capitalize" }}
                                     fontSize="md"
-                                    key={index}
-                                  >
-                                    {name}
+                                    >
+                                    {name[0]}
                                   </Text>
 
                                   <Box pt={3}>
-                                    <Pressable
-                                      onPress={onOpen}
-                                      position="relative"
-                                    >
+                                    <Pressable onPress={() => downloadFile(name[1])}>
                                       {({ isHovered, isPressed }) => {
                                         return (
                                           <Box
